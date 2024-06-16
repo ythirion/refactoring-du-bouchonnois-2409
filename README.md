@@ -1,4 +1,11 @@
 # Refactoring du Bouchonnois
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=ythirion_refactoring-du-bouchonnois-2409&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=ythirion_refactoring-du-bouchonnois-2409)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ythirion_refactoring-du-bouchonnois-2409&metric=coverage)](https://sonarcloud.io/summary/new_code?id=ythirion_refactoring-du-bouchonnois-2409)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=ythirion_refactoring-du-bouchonnois-2409&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=ythirion_refactoring-du-bouchonnois-2409)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=ythirion_refactoring-du-bouchonnois-2409&metric=bugs)](https://sonarcloud.io/summary/new_code?id=ythirion_refactoring-du-bouchonnois-2409)
+[![CodeScene Code Health](https://codescene.io/projects/54967/status-badges/code-health)](https://codescene.io/projects/54967)
+[![CodeScene general](https://codescene.io/images/analyzed-by-codescene-badge.svg)](https://codescene.io/projects/54967)
+
 Ce kata a pour objectif de s'exercer au refactoring sur un code existant afin de :
 - Identifier certains `smells` dans notre code
 - Comprendre quelle pratique et/ou outil peuvent nous aider pour surpasser ces `smells`
