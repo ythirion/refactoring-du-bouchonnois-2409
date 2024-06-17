@@ -46,3 +46,13 @@ jobs:
           dotnet build .
           dotnet-coverage collect "dotnet test ." -f xml -o "coverage.xml"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+      - name: Run Mutation Tests
+        shell: powershell
+        run: |
+          dotnet tool install --global stryker
+          dotnet stryker
+      - name: Publish Mutation report
+        uses: actions/upload-artifact@v3
+        with:
+          name: html-report
+          path: ${{github.workspace}}/StrykerOutput/**/**/*.html
