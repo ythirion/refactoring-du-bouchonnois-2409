@@ -49,7 +49,7 @@ jobs:
       - name: Run Mutation Tests
         shell: powershell
         run: |
-          dotnet tool install --global stryker
+          dotnet tool install -g dotnet-stryker
           dotnet stryker
       - name: Publish Mutation report
         uses: actions/upload-artifact@v3
