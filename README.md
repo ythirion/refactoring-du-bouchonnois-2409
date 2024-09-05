@@ -1,4 +1,5 @@
 # Refactoring du Bouchonnois
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4d0082c592244f5fb3a2503307e074ff)](https://app.codacy.com/gh/ythirion/refactoring-du-bouchonnois-2409?utm_source=github.com&utm_medium=referral&utm_content=ythirion/refactoring-du-bouchonnois-2409&utm_campaign=Badge_Grade)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=ythirion_refactoring-du-bouchonnois-2409&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=ythirion_refactoring-du-bouchonnois-2409)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ythirion_refactoring-du-bouchonnois-2409&metric=coverage)](https://sonarcloud.io/summary/new_code?id=ythirion_refactoring-du-bouchonnois-2409)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=ythirion_refactoring-du-bouchonnois-2409&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=ythirion_refactoring-du-bouchonnois-2409)
