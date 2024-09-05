@@ -5,6 +5,7 @@
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=ythirion_refactoring-du-bouchonnois-2409&metric=bugs)](https://sonarcloud.io/summary/new_code?id=ythirion_refactoring-du-bouchonnois-2409)
 [![CodeScene Code Health](https://codescene.io/projects/54967/status-badges/code-health)](https://codescene.io/projects/54967)
 [![CodeScene general](https://codescene.io/images/analyzed-by-codescene-badge.svg)](https://codescene.io/projects/54967)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/143a0a68f4dd4cfca691d8936fd10a64)](https://app.codacy.com/gh/ythirion/refactoring-du-bouchonnois-2409/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 Ce kata a pour objectif de s'exercer au refactoring sur un code existant afin de :
 - Identifier certains `smells` dans notre code
