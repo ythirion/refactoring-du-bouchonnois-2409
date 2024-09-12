@@ -80,6 +80,7 @@ public class ScenarioTests
         }
         catch (TasPlusDeBallesMonVieuxChasseALaMain e)
         {
+            Assert.Fail(e.Message);
         }
 
         time = time.Add(TimeSpan.FromMinutes(19));
