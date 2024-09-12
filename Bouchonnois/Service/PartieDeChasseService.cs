@@ -28,9 +28,9 @@ public class PartieDeChasseService
         {
             Id = Guid.NewGuid(),
             Status = PartieStatus.EnCours,
-            Chasseurs = new List<Chasseur>(),
+            Chasseurs = [],
             Terrain = new Terrain { Nom = terrainDeChasse.nom, NbGalinettes = terrainDeChasse.nbGalinettes },
-            Events = new List<Event>()
+            Events = []
         };
 
         foreach ( (string nom, int nbBalles) chasseur in chasseurs )

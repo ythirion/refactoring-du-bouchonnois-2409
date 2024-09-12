@@ -121,15 +121,15 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20 },
                     new() { Nom = "Bernard", BallesRestantes = 8 },
                     new() { Nom = "Robert", BallesRestantes = 12 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.EnCours,
-                Events = new List<Event>()
+                Events = []
             });
 
             var service = new PartieDeChasseService(repository, () => DateTime.Now);
@@ -200,15 +200,15 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20 },
                     new() { Nom = "Bernard", BallesRestantes = 0 },
                     new() { Nom = "Robert", BallesRestantes = 12 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.EnCours,
-                Events = new List<Event>()
+                Events = []
             });
 
             var service = new PartieDeChasseService(repository, () => DateTime.Now);
@@ -227,12 +227,12 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20 },
                     new() { Nom = "Bernard", BallesRestantes = 8 },
                     new() { Nom = "Robert", BallesRestantes = 12 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 0 },
                 Status = PartieStatus.EnCours
             });
@@ -256,12 +256,12 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20 },
                     new() { Nom = "Bernard", BallesRestantes = 8 },
                     new() { Nom = "Robert", BallesRestantes = 12 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.EnCours
             });
@@ -285,15 +285,15 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20 },
                     new() { Nom = "Bernard", BallesRestantes = 8 },
                     new() { Nom = "Robert", BallesRestantes = 12 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.Apéro,
-                Events = new List<Event>()
+                Events = []
             });
 
             var service = new PartieDeChasseService(repository, () => DateTime.Now);
@@ -312,15 +312,15 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20 },
                     new() { Nom = "Bernard", BallesRestantes = 8 },
                     new() { Nom = "Robert", BallesRestantes = 12 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.Terminée,
-                Events = new List<Event>()
+                Events = []
             });
 
             var service = new PartieDeChasseService(repository, () => DateTime.Now);
@@ -342,15 +342,15 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20 },
                     new() { Nom = "Bernard", BallesRestantes = 8 },
                     new() { Nom = "Robert", BallesRestantes = 12 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.EnCours,
-                Events = new List<Event>()
+                Events = []
             });
 
             var service = new PartieDeChasseService(repository, () => DateTime.Now);
@@ -421,15 +421,15 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20 },
                     new() { Nom = "Bernard", BallesRestantes = 0 },
                     new() { Nom = "Robert", BallesRestantes = 12 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.EnCours,
-                Events = new List<Event>()
+                Events = []
             });
 
             var service = new PartieDeChasseService(repository, () => DateTime.Now);
@@ -448,12 +448,12 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20 },
                     new() { Nom = "Bernard", BallesRestantes = 8 },
                     new() { Nom = "Robert", BallesRestantes = 12 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.EnCours
             });
@@ -477,15 +477,15 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20 },
                     new() { Nom = "Bernard", BallesRestantes = 8 },
                     new() { Nom = "Robert", BallesRestantes = 12 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.Apéro,
-                Events = new List<Event>()
+                Events = []
             });
 
             var service = new PartieDeChasseService(repository, () => DateTime.Now);
@@ -504,15 +504,15 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20 },
                     new() { Nom = "Bernard", BallesRestantes = 8 },
                     new() { Nom = "Robert", BallesRestantes = 12 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.Terminée,
-                Events = new List<Event>()
+                Events = []
             });
 
             var service = new PartieDeChasseService(repository, () => DateTime.Now);
@@ -534,15 +534,15 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20 },
                     new() { Nom = "Bernard", BallesRestantes = 8 },
                     new() { Nom = "Robert", BallesRestantes = 12 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.EnCours,
-                Events = new List<Event>()
+                Events = []
             });
 
             var service = new PartieDeChasseService(repository, () => DateTime.Now);
@@ -612,12 +612,12 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20 },
                     new() { Nom = "Bernard", BallesRestantes = 8 },
                     new() { Nom = "Robert", BallesRestantes = 12 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.Apéro
             });
@@ -641,12 +641,12 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20 },
                     new() { Nom = "Bernard", BallesRestantes = 8 },
                     new() { Nom = "Robert", BallesRestantes = 12 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.Terminée
             });
@@ -673,15 +673,15 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20 },
                     new() { Nom = "Bernard", BallesRestantes = 8 },
                     new() { Nom = "Robert", BallesRestantes = 12 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.Apéro,
-                Events = new List<Event>()
+                Events = []
             });
 
             var service = new PartieDeChasseService(repository, () => DateTime.Now);
@@ -751,12 +751,12 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20 },
                     new() { Nom = "Bernard", BallesRestantes = 8 },
                     new() { Nom = "Robert", BallesRestantes = 12 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.EnCours
             });
@@ -781,12 +781,12 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20 },
                     new() { Nom = "Bernard", BallesRestantes = 8 },
                     new() { Nom = "Robert", BallesRestantes = 12 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.Terminée
             });
@@ -814,15 +814,15 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20 },
                     new() { Nom = "Bernard", BallesRestantes = 8 },
                     new() { Nom = "Robert", BallesRestantes = 12, NbGalinettes = 2 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.EnCours,
-                Events = new List<Event>()
+                Events = []
             });
 
             var service = new PartieDeChasseService(repository, () => DateTime.Now);
@@ -880,10 +880,10 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur> { new() { Nom = "Robert", BallesRestantes = 12, NbGalinettes = 2 } },
+                Chasseurs = [new() { Nom = "Robert", BallesRestantes = 12, NbGalinettes = 2 }],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.EnCours,
-                Events = new List<Event>()
+                Events = []
             });
 
             var service = new PartieDeChasseService(repository, () => DateTime.Now);
@@ -923,15 +923,15 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20, NbGalinettes = 2 },
                     new() { Nom = "Bernard", BallesRestantes = 8, NbGalinettes = 2 },
                     new() { Nom = "Robert", BallesRestantes = 12 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.EnCours,
-                Events = new List<Event>()
+                Events = []
             });
 
             var service = new PartieDeChasseService(repository, () => DateTime.Now);
@@ -989,15 +989,15 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20 },
                     new() { Nom = "Bernard", BallesRestantes = 8 },
                     new() { Nom = "Robert", BallesRestantes = 12 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.EnCours,
-                Events = new List<Event>()
+                Events = []
             });
 
             var service = new PartieDeChasseService(repository, () => DateTime.Now);
@@ -1055,15 +1055,15 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20, NbGalinettes = 3 },
                     new() { Nom = "Bernard", BallesRestantes = 8, NbGalinettes = 3 },
                     new() { Nom = "Robert", BallesRestantes = 12, NbGalinettes = 3 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.Apéro,
-                Events = new List<Event>()
+                Events = []
             });
 
             var service = new PartieDeChasseService(repository, () => DateTime.Now);
@@ -1121,12 +1121,12 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20 },
                     new() { Nom = "Bernard", BallesRestantes = 8 },
                     new() { Nom = "Robert", BallesRestantes = 12 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.Terminée
             });
@@ -1155,19 +1155,19 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20 },
                     new() { Nom = "Bernard", BallesRestantes = 8 },
                     new() { Nom = "Robert", BallesRestantes = 12, NbGalinettes = 2 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.EnCours,
-                Events = new List<Event>
-                {
+                Events =
+                [
                     new(new DateTime(2024, 4, 25, 9, 0, 12),
                         "La partie de chasse commence à Pitibon sur Sauldre avec Dédé (20 balles), Bernard (8 balles), Robert (12 balles)")
-                }
+                ]
             });
 
             var status = service.ConsulterStatus(id);
@@ -1188,18 +1188,19 @@ public class PartieDeChasseServiceTests
             repository.Add(new PartieDeChasse
             {
                 Id = id,
-                Chasseurs = new List<Chasseur>
-                {
+                Chasseurs =
+                [
                     new() { Nom = "Dédé", BallesRestantes = 20 },
                     new() { Nom = "Bernard", BallesRestantes = 8 },
                     new() { Nom = "Robert", BallesRestantes = 12, NbGalinettes = 2 }
-                },
+                ],
                 Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3 },
                 Status = PartieStatus.EnCours,
-                Events = new List<Event>
-                {
+                Events =
+                [
                     new(new DateTime(2024, 4, 25, 9, 0, 12),
                         "La partie de chasse commence à Pitibon sur Sauldre avec Dédé (20 balles), Bernard (8 balles), Robert (12 balles)"),
+
                     new(new DateTime(2024, 4, 25, 9, 10, 0), "Dédé tire"),
                     new(new DateTime(2024, 4, 25, 9, 40, 0), "Robert tire sur une galinette"),
                     new(new DateTime(2024, 4, 25, 10, 0, 0), "Petit apéro"),
@@ -1219,10 +1220,11 @@ public class PartieDeChasseServiceTests
                     new(new DateTime(2024, 4, 25, 14, 41, 6), "Bernard tire"),
                     new(new DateTime(2024, 4, 25, 14, 41, 7),
                         "Bernard tire -> T'as plus de balles mon vieux, chasse à la main"),
+
                     new(new DateTime(2024, 4, 25, 15, 0, 0), "Robert tire sur une galinette"),
                     new(new DateTime(2024, 4, 25, 15, 30, 0),
                         "La partie de chasse est terminée, vainqueur :  Robert - 3 galinettes")
-                }
+                ]
             });
 
             var status = service.ConsulterStatus(id);
