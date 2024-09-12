@@ -459,10 +459,13 @@ public class PartieDeChasseServiceTests
             });
 
             var service = new PartieDeChasseService(repository, () => DateTime.Now);
-            Action? chasseurInconnuVeutTirer = () => service.Tirer(id, "Chasseur inconnu");
+            var nomChasseurInconnu = "Chasseur inconnu";
+
+            Action? chasseurInconnuVeutTirer = () => service.Tirer(id, nomChasseurInconnu);
 
             chasseurInconnuVeutTirer.Should()
-                .Throw<ChasseurInconnu>();
+                .Throw<ChasseurInconnu>()
+                .WithMessage($"Chasseur inconnu {nomChasseurInconnu}");
             repository.SavedPartieDeChasse()
                 .Should()
                 .BeNull();
