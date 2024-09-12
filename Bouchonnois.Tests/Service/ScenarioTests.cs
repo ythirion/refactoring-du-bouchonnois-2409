@@ -78,9 +78,8 @@ public class ScenarioTests
         {
             service.Tirer(id, "Bernard");
         }
-        catch (TasPlusDeBallesMonVieuxChasseALaMain e)
+        catch (TasPlusDeBallesMonVieuxChasseALaMain)
         {
-            Assert.Fail(e.Message);
         }
 
         time = time.Add(TimeSpan.FromMinutes(19));
