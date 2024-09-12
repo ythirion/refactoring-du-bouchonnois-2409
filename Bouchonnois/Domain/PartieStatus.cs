@@ -1,9 +1,8 @@
-namespace Bouchonnois.Domain
+namespace Bouchonnois.Domain;
+
+public enum PartieStatus
 {
-    public enum PartieStatus
-    {
-        EnCours,
-        Apéro,
-        Terminée
-    }
+    EnCours,
+    Apéro,
+    Terminée
 }

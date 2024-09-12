@@ -1,13 +1,12 @@
 ﻿using Bouchonnois.Service;
 
-namespace Bouchonnois.Domain
+namespace Bouchonnois.Domain;
+
+public class PartieDeChasse
 {
-    public class PartieDeChasse
-    {
-        public Guid Id { get; set; }
-        public List<Chasseur> Chasseurs { get; set; } = [];
-        public required Terrain Terrain { get; set; }
-        public PartieStatus Status { get; set; }
-        public List<Event> Events { get; set; } = [];
-    }
+    public Guid Id { get; set; }
+    public List<Chasseur> Chasseurs { get; set; } = [];
+    public required Terrain Terrain { get; set; }
+    public PartieStatus Status { get; set; }
+    public List<Event> Events { get; set; } = [];
 }

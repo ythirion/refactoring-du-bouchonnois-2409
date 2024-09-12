@@ -1,6 +1,5 @@
-namespace Bouchonnois.Service.Exceptions
+namespace Bouchonnois.Service.Exceptions;
+
+public class TasPlusDeBallesMonVieuxChasseALaMain : Exception
 {
-    public class TasPlusDeBallesMonVieuxChasseALaMain : Exception
-    {
-    }
 }

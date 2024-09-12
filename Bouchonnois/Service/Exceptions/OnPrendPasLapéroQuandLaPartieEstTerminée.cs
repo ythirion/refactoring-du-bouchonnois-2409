@@ -1,6 +1,5 @@
-namespace Bouchonnois.Service.Exceptions
+namespace Bouchonnois.Service.Exceptions;
+
+public class OnPrendPasLapéroQuandLaPartieEstTerminée : Exception
 {
-    public class OnPrendPasLapéroQuandLaPartieEstTerminée : Exception
-    {
-    }
 }

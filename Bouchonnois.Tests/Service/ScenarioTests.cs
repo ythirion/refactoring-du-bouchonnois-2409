@@ -12,14 +12,9 @@ public class ScenarioTests
         var time = new DateTime(2024, 4, 25, 9, 0, 0);
         var repository = new PartieDeChasseRepositoryForTests();
         var service = new PartieDeChasseService(repository, () => time);
-        var chasseurs = new List<(string, int)>
-        {
-            ("Dédé", 20),
-            ("Bernard", 8),
-            ("Robert", 12)
-        };
+        var chasseurs = new List<(string, int)> { ("Dédé", 20), ("Bernard", 8), ("Robert", 12) };
         var terrainDeChasse = ("Pitibon sur Sauldre", 4);
-        var id = service.Demarrer(
+        Guid id = service.Demarrer(
             terrainDeChasse,
             chasseurs
         );
@@ -78,7 +73,7 @@ public class ScenarioTests
         {
             service.Tirer(id, "Bernard");
         }
-        catch (TasPlusDeBallesMonVieuxChasseALaMain)
+        catch ( TasPlusDeBallesMonVieuxChasseALaMain )
         {
         }
 

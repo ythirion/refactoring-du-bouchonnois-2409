@@ -1,10 +1,9 @@
-namespace Bouchonnois.Service.Exceptions
+namespace Bouchonnois.Service.Exceptions;
+
+public class ChasseurInconnu : Exception
 {
-    public class ChasseurInconnu : Exception
+    public ChasseurInconnu(string chasseur)
+        : base($"Chasseur inconnu {chasseur}")
     {
-        public ChasseurInconnu(string chasseur)
-            : base($"Chasseur inconnu {chasseur}")
-        {
-        }
     }
 }
