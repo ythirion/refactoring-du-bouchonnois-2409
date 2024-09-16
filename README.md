@@ -96,3 +96,5 @@ Pour chaque étape :
 - ...
 
 Bon voyage 🤩
+
+## Participants
