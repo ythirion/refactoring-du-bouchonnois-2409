@@ -79,7 +79,7 @@ public class PartieDeChasseService
                 {
                     if ( partieDeChasse.Chasseurs.Exists(c => c.Nom == chasseur) )
                     {
-                        Chasseur chasseurQuiTire = partieDeChasse.Chasseurs.First(c => c.Nom == chasseur);
+                        Chasseur chasseurQuiTire = partieDeChasse.Chasseurs.Find(c => c.Nom == chasseur)!;
 
                         if ( chasseurQuiTire.BallesRestantes == 0 )
                         {
@@ -140,7 +140,7 @@ public class PartieDeChasseService
             {
                 if ( partieDeChasse.Chasseurs.Exists(c => c.Nom == chasseur) )
                 {
-                    Chasseur chasseurQuiTire = partieDeChasse.Chasseurs.First(c => c.Nom == chasseur);
+                    Chasseur chasseurQuiTire = partieDeChasse.Chasseurs.Find(c => c.Nom == chasseur)!;
 
                     if ( chasseurQuiTire.BallesRestantes == 0 )
                     {
@@ -245,7 +245,7 @@ public class PartieDeChasseService
 
         partieDeChasse.Status = PartieStatus.Terminée;
 
-        var result = "";
+        string result;
 
         if ( classement.All(group => group.Key == 0) )
         {
@@ -256,11 +256,11 @@ public class PartieDeChasseService
         }
         else
         {
-            result = string.Join(", ", classement.First()
-                .Select(c => c.Nom));
+            IGrouping<int,Chasseur> firstChasseur = classement.ElementAt(0);
+            result = string.Join(", ", firstChasseur.Select(c => c.Nom));
             partieDeChasse.Events.Add(
                 new Event(_timeProvider(),
-                    $"La partie de chasse est terminée, vainqueur : {string.Join(", ", classement.First().Select(c => $"{c.Nom} - {c.NbGalinettes} galinettes"))}"
+                    $"La partie de chasse est terminée, vainqueur : {string.Join(", ", firstChasseur.Select(c => $"{c.Nom} - {c.NbGalinettes} galinettes"))}"
                 )
             );
         }
