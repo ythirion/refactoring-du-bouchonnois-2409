@@ -98,3 +98,42 @@ Pour chaque étape :
 Bon voyage 🤩
 
 ## Participants
+<table>
+<tr>
+    <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
+        <a href=https://github.com/arthur112d>
+            <img src=https://avatars.githubusercontent.com/u/33544640?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Arthur/>
+            <br />
+            <sub style="font-size:14px"><b>Arthur</b></sub>
+        </a>
+    </td>
+    <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
+        <a href=https://github.com/padnom>
+            <img src=https://avatars.githubusercontent.com/u/20400123?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Jonathan />
+            <br />
+            <sub style="font-size:14px"><b>Jonathan</b></sub>
+        </a>
+    </td>
+    <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
+        <a href=https://github.com/LaurentDecamps>
+            <img src=https://avatars.githubusercontent.com/u/3742803?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Laurent/>
+            <br />
+            <sub style="font-size:14px"><b>Laurent</b></sub>
+        </a>
+    </td>
+    <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
+        <a href=https://github.com/pierrebelin>
+            <img src=https://avatars.githubusercontent.com/u/25244392?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Pierre/>
+            <br />
+            <sub style="font-size:14px"><b>Pierre</b></sub>
+        </a>
+    </td>
+    <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
+        <a href=https://github.com/yanncourtel>
+            <img src=https://avatars.githubusercontent.com/u/75068587?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Yann/>
+            <br />
+            <sub style="font-size:14px"><b>Yann</b></sub>
+        </a>
+    </td>
+</tr>
+</table>
