@@ -4,5 +4,5 @@ public enum PartieStatus
 {
     EnCours,
     Apéro,
-    Terminée
+    Terminée,
 }

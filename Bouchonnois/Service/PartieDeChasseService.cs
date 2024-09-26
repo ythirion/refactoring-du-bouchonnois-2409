@@ -17,6 +17,23 @@ public class PartieDeChasseService
         _timeProvider = timeProvider;
     }
 
+    public string ConsulterStatus(Guid id)
+    {
+        PartieDeChasse partieDeChasse = _repository.GetById(id);
+
+        if ( partieDeChasse == null )
+        {
+            throw new LaPartieDeChasseNexistePas();
+        }
+
+        return string.Join(
+            Environment.NewLine,
+            partieDeChasse.Events
+                          .OrderByDescending(@event => @event.Date)
+                          .Select(@event => @event.ToString())
+        );
+    }
+
     public Guid Demarrer((string nom, int nbGalinettes) terrainDeChasse, List<(string nom, int nbBalles)> chasseurs)
     {
         if ( terrainDeChasse.nbGalinettes <= 0 )
@@ -24,14 +41,14 @@ public class PartieDeChasseService
             throw new ImpossibleDeDémarrerUnePartieSansGalinettes();
         }
 
-        var partieDeChasse = new PartieDeChasse()
-        {
-            Id = Guid.NewGuid(),
-            Status = PartieStatus.EnCours,
-            Chasseurs = [],
-            Terrain = new Terrain { Nom = terrainDeChasse.nom, NbGalinettes = terrainDeChasse.nbGalinettes },
-            Events = []
-        };
+        var partieDeChasse = new PartieDeChasse
+                             {
+                                 Id = Guid.NewGuid(),
+                                 Status = PartieStatus.EnCours,
+                                 Chasseurs = [],
+                                 Terrain = new Terrain { Nom = terrainDeChasse.nom, NbGalinettes = terrainDeChasse.nbGalinettes, },
+                                 Events = [],
+                             };
 
         foreach ( (string nom, int nbBalles) chasseur in chasseurs )
         {
@@ -40,7 +57,7 @@ public class PartieDeChasseService
                 throw new ImpossibleDeDémarrerUnePartieAvecUnChasseurSansBalle();
             }
 
-            partieDeChasse.Chasseurs.Add(new Chasseur { Nom = chasseur.nom, BallesRestantes = chasseur.nbBalles });
+            partieDeChasse.Chasseurs.Add(new Chasseur { Nom = chasseur.nom, BallesRestantes = chasseur.nbBalles, });
         }
 
         if ( partieDeChasse.Chasseurs.Count == 0 )
@@ -54,130 +71,12 @@ public class PartieDeChasseService
         );
 
         partieDeChasse.Events.Add(new Event(_timeProvider(),
-            $"La partie de chasse commence à {partieDeChasse.Terrain.Nom} avec {chasseursToString}")
+                                            $"La partie de chasse commence à {partieDeChasse.Terrain.Nom} avec {chasseursToString}")
         );
 
         _repository.Save(partieDeChasse);
 
         return partieDeChasse.Id;
-    }
-
-    public void TirerSurUneGalinette(Guid id, string chasseur)
-    {
-        PartieDeChasse partieDeChasse = _repository.GetById(id);
-
-        if ( partieDeChasse == null )
-        {
-            throw new LaPartieDeChasseNexistePas();
-        }
-
-        if ( partieDeChasse.Terrain.NbGalinettes != 0 )
-        {
-            if ( partieDeChasse.Status != PartieStatus.Apéro )
-            {
-                if ( partieDeChasse.Status != PartieStatus.Terminée )
-                {
-                    if ( partieDeChasse.Chasseurs.Exists(c => c.Nom == chasseur) )
-                    {
-                        Chasseur chasseurQuiTire = partieDeChasse.Chasseurs.Find(c => c.Nom == chasseur)!;
-
-                        if ( chasseurQuiTire.BallesRestantes == 0 )
-                        {
-                            partieDeChasse.Events.Add(new Event(_timeProvider(),
-                                $"{chasseur} veut tirer sur une galinette -> T'as plus de balles mon vieux, chasse à la main"));
-                            _repository.Save(partieDeChasse);
-
-                            throw new TasPlusDeBallesMonVieuxChasseALaMain();
-                        }
-
-                        chasseurQuiTire.BallesRestantes--;
-                        chasseurQuiTire.NbGalinettes++;
-                        partieDeChasse.Terrain.NbGalinettes--;
-                        partieDeChasse.Events.Add(new Event(_timeProvider(), $"{chasseur} tire sur une galinette"));
-                    }
-                    else
-                    {
-                        throw new ChasseurInconnu(chasseur);
-                    }
-                }
-                else
-                {
-                    partieDeChasse.Events.Add(new Event(_timeProvider(),
-                        $"{chasseur} veut tirer -> On tire pas quand la partie est terminée"));
-                    _repository.Save(partieDeChasse);
-
-                    throw new OnTirePasQuandLaPartieEstTerminée();
-                }
-            }
-            else
-            {
-                partieDeChasse.Events.Add(new Event(_timeProvider(),
-                    $"{chasseur} veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!"));
-                _repository.Save(partieDeChasse);
-                throw new OnTirePasPendantLapéroCestSacré();
-            }
-        }
-        else
-        {
-            throw new TasTropPicoléMonVieuxTasRienTouché();
-        }
-
-        _repository.Save(partieDeChasse);
-    }
-
-    public void Tirer(Guid id, string chasseur)
-    {
-        PartieDeChasse partieDeChasse = _repository.GetById(id);
-
-        if ( partieDeChasse == null )
-        {
-            throw new LaPartieDeChasseNexistePas();
-        }
-
-        if ( partieDeChasse.Status != PartieStatus.Apéro )
-        {
-            if ( partieDeChasse.Status != PartieStatus.Terminée )
-            {
-                if ( partieDeChasse.Chasseurs.Exists(c => c.Nom == chasseur) )
-                {
-                    Chasseur chasseurQuiTire = partieDeChasse.Chasseurs.Find(c => c.Nom == chasseur)!;
-
-                    if ( chasseurQuiTire.BallesRestantes == 0 )
-                    {
-                        partieDeChasse.Events.Add(new Event(_timeProvider(),
-                            $"{chasseur} tire -> T'as plus de balles mon vieux, chasse à la main"));
-                        _repository.Save(partieDeChasse);
-
-                        throw new TasPlusDeBallesMonVieuxChasseALaMain();
-                    }
-
-                    partieDeChasse.Events.Add(new Event(_timeProvider(), $"{chasseur} tire"));
-                    chasseurQuiTire.BallesRestantes--;
-                }
-                else
-                {
-                    throw new ChasseurInconnu(chasseur);
-                }
-            }
-            else
-            {
-                partieDeChasse.Events.Add(new Event(_timeProvider(),
-                    $"{chasseur} veut tirer -> On tire pas quand la partie est terminée"));
-                _repository.Save(partieDeChasse);
-
-                throw new OnTirePasQuandLaPartieEstTerminée();
-            }
-        }
-        else
-        {
-            partieDeChasse.Events.Add(new Event(_timeProvider(),
-                $"{chasseur} veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!"));
-            _repository.Save(partieDeChasse);
-
-            throw new OnTirePasPendantLapéroCestSacré();
-        }
-
-        _repository.Save(partieDeChasse);
     }
 
     public void PrendreLapéro(Guid id)
@@ -193,16 +92,15 @@ public class PartieDeChasseService
         {
             throw new OnEstDéjàEnTrainDePrendreLapéro();
         }
-        else if ( partieDeChasse.Status == PartieStatus.Terminée )
+
+        if ( partieDeChasse.Status == PartieStatus.Terminée )
         {
             throw new OnPrendPasLapéroQuandLaPartieEstTerminée();
         }
-        else
-        {
-            partieDeChasse.Status = PartieStatus.Apéro;
-            partieDeChasse.Events.Add(new Event(_timeProvider(), "Petit apéro"));
-            _repository.Save(partieDeChasse);
-        }
+
+        partieDeChasse.Status = PartieStatus.Apéro;
+        partieDeChasse.Events.Add(new Event(_timeProvider(), "Petit apéro"));
+        _repository.Save(partieDeChasse);
     }
 
     public void ReprendreLaPartie(Guid id)
@@ -234,9 +132,9 @@ public class PartieDeChasseService
         PartieDeChasse partieDeChasse = _repository.GetById(id);
 
         IOrderedEnumerable<IGrouping<int, Chasseur>> classement = partieDeChasse
-            .Chasseurs
-            .GroupBy(c => c.NbGalinettes)
-            .OrderByDescending(g => g.Key);
+                                                                  .Chasseurs
+                                                                  .GroupBy(c => c.NbGalinettes)
+                                                                  .OrderByDescending(g => g.Key);
 
         if ( partieDeChasse.Status == PartieStatus.Terminée )
         {
@@ -250,17 +148,20 @@ public class PartieDeChasseService
         if ( classement.All(group => group.Key == 0) )
         {
             result = "Brocouille";
+
             partieDeChasse.Events.Add(
                 new Event(_timeProvider(), "La partie de chasse est terminée, vainqueur : Brocouille")
             );
         }
         else
         {
-            IGrouping<int,Chasseur> firstChasseur = classement.ElementAt(0);
+            IGrouping<int, Chasseur> firstChasseur = classement.ElementAt(0);
             result = string.Join(", ", firstChasseur.Select(c => c.Nom));
+
             partieDeChasse.Events.Add(
                 new Event(_timeProvider(),
-                    $"La partie de chasse est terminée, vainqueur : {string.Join(", ", firstChasseur.Select(c => $"{c.Nom} - {c.NbGalinettes} galinettes"))}"
+                          $"La partie de chasse est terminée, vainqueur : {
+                              string.Join(", ", firstChasseur.Select(c => $"{c.Nom} - {c.NbGalinettes} galinettes"))}"
                 )
             );
         }
@@ -270,7 +171,7 @@ public class PartieDeChasseService
         return result;
     }
 
-    public string ConsulterStatus(Guid id)
+    public void Tirer(Guid id, string chasseur)
     {
         PartieDeChasse partieDeChasse = _repository.GetById(id);
 
@@ -279,11 +180,119 @@ public class PartieDeChasseService
             throw new LaPartieDeChasseNexistePas();
         }
 
-        return string.Join(
-            Environment.NewLine,
-            partieDeChasse.Events
-                .OrderByDescending(@event => @event.Date)
-                .Select(@event => @event.ToString())
-        );
+        if ( partieDeChasse.Status != PartieStatus.Apéro )
+        {
+            if ( partieDeChasse.Status != PartieStatus.Terminée )
+            {
+                if ( partieDeChasse.Chasseurs.Exists(c => c.Nom == chasseur) )
+                {
+                    Chasseur chasseurQuiTire = partieDeChasse.Chasseurs.Find(c => c.Nom == chasseur)!;
+
+                    if ( chasseurQuiTire.BallesRestantes == 0 )
+                    {
+                        partieDeChasse.Events.Add(new Event(_timeProvider(),
+                                                            $"{chasseur} tire -> T'as plus de balles mon vieux, chasse à la main"));
+
+                        _repository.Save(partieDeChasse);
+
+                        throw new TasPlusDeBallesMonVieuxChasseALaMain();
+                    }
+
+                    partieDeChasse.Events.Add(new Event(_timeProvider(), $"{chasseur} tire"));
+                    chasseurQuiTire.BallesRestantes--;
+                }
+                else
+                {
+                    throw new ChasseurInconnu(chasseur);
+                }
+            }
+            else
+            {
+                partieDeChasse.Events.Add(new Event(_timeProvider(),
+                                                    $"{chasseur} veut tirer -> On tire pas quand la partie est terminée"));
+
+                _repository.Save(partieDeChasse);
+
+                throw new OnTirePasQuandLaPartieEstTerminée();
+            }
+        }
+        else
+        {
+            partieDeChasse.Events.Add(new Event(_timeProvider(),
+                                                $"{chasseur} veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!"));
+
+            _repository.Save(partieDeChasse);
+
+            throw new OnTirePasPendantLapéroCestSacré();
+        }
+
+        _repository.Save(partieDeChasse);
+    }
+
+    public void TirerSurUneGalinette(Guid id, string chasseur)
+    {
+        PartieDeChasse partieDeChasse = _repository.GetById(id);
+
+        if ( partieDeChasse == null )
+        {
+            throw new LaPartieDeChasseNexistePas();
+        }
+
+        if ( partieDeChasse.Terrain.NbGalinettes != 0 )
+        {
+            if ( partieDeChasse.Status != PartieStatus.Apéro )
+            {
+                if ( partieDeChasse.Status != PartieStatus.Terminée )
+                {
+                    if ( partieDeChasse.Chasseurs.Exists(c => c.Nom == chasseur) )
+                    {
+                        Chasseur chasseurQuiTire = partieDeChasse.Chasseurs.Find(c => c.Nom == chasseur)!;
+
+                        if ( chasseurQuiTire.BallesRestantes == 0 )
+                        {
+                            partieDeChasse.Events.Add(new Event(_timeProvider(),
+                                                                $"{chasseur} veut tirer sur une galinette -> T'as plus de balles mon vieux, chasse à la main"));
+
+                            _repository.Save(partieDeChasse);
+
+                            throw new TasPlusDeBallesMonVieuxChasseALaMain();
+                        }
+
+                        chasseurQuiTire.BallesRestantes--;
+                        chasseurQuiTire.NbGalinettes++;
+                        partieDeChasse.Terrain.NbGalinettes--;
+                        partieDeChasse.Events.Add(new Event(_timeProvider(), $"{chasseur} tire sur une galinette"));
+                    }
+                    else
+                    {
+                        throw new ChasseurInconnu(chasseur);
+                    }
+                }
+                else
+                {
+                    partieDeChasse.Events.Add(new Event(_timeProvider(),
+                                                        $"{chasseur} veut tirer -> On tire pas quand la partie est terminée"));
+
+                    _repository.Save(partieDeChasse);
+
+                    throw new OnTirePasQuandLaPartieEstTerminée();
+                }
+            }
+            else
+            {
+                partieDeChasse.Events.Add(new Event(_timeProvider(),
+                                                    $"{chasseur} veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!"));
+
+                _repository.Save(partieDeChasse);
+
+                throw new OnTirePasPendantLapéroCestSacré();
+            }
+        }
+        else
+        {
+            throw new TasTropPicoléMonVieuxTasRienTouché();
+        }
+
+        _repository.Save(partieDeChasse);
     }
 }

@@ -8,11 +8,11 @@ public partial class PartieDeChasseServiceTests
     protected static readonly Func<DateTime> TimeProvider = () => Now;
 
     protected void AssertLastEvent(PartieDeChasse partieDeChasse,
-        string expectedMessage)
+                                   string expectedMessage)
     {
         partieDeChasse.Events.Should()
-            .HaveCount(1)
-            .And
-            .EndWith(new Event(Now, expectedMessage));
+                      .HaveCount(1)
+                      .And
+                      .EndWith(new Event(Now, expectedMessage));
     }
 }

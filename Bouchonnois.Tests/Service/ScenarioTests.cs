@@ -12,8 +12,9 @@ public class ScenarioTests
         var time = new DateTime(2024, 4, 25, 9, 0, 0);
         var repository = new PartieDeChasseRepositoryForTests();
         var service = new PartieDeChasseService(repository, () => time);
-        var chasseurs = new List<(string, int)> { ("Dédé", 20), ("Bernard", 8), ("Robert", 12) };
+        var chasseurs = new List<(string, int)> { ("Dédé", 20), ("Bernard", 8), ("Robert", 12), };
         var terrainDeChasse = ("Pitibon sur Sauldre", 4);
+
         Guid id = service.Demarrer(
             terrainDeChasse,
             chasseurs
@@ -84,9 +85,9 @@ public class ScenarioTests
         service.TerminerLaPartie(id);
 
         service.ConsulterStatus(id)
-            .Should()
-            .BeEquivalentTo(
-                @"15:30 - La partie de chasse est terminée, vainqueur : Robert - 3 galinettes
+               .Should()
+               .BeEquivalentTo(
+                   @"15:30 - La partie de chasse est terminée, vainqueur : Robert - 3 galinettes
 15:00 - Robert tire sur une galinette
 14:41 - Bernard tire -> T'as plus de balles mon vieux, chasse à la main
 14:41 - Bernard tire
@@ -106,6 +107,6 @@ public class ScenarioTests
 09:40 - Robert tire sur une galinette
 09:10 - Dédé tire
 09:00 - La partie de chasse commence à Pitibon sur Sauldre avec Dédé (20 balles), Bernard (8 balles), Robert (12 balles)"
-            );
+               );
     }
 }
