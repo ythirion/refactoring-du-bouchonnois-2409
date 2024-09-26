@@ -7,13 +7,16 @@ namespace Bouchonnois.Tests.Service;
 
 public class PartieDeChasseServiceTests
 {
+    private static readonly DateTime Now = new(2024, 6, 6, 14, 50, 45);
+    private static readonly Func<DateTime> TimeProvider = () => Now;
+    
     public class DemarrerUnePartieDeChasse
     {
         [Fact]
         public void AvecPlusieursChasseurs()
         {
             var repository = new PartieDeChasseRepositoryForTests();
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             var chasseurs = new List<(string, int)> { ("Dédé", 20), ("Bernard", 8), ("Robert", 12) };
             var terrainDeChasse = ("Pitibon sur Sauldre", 3);
             Guid id = service.Demarrer(
@@ -65,7 +68,7 @@ public class PartieDeChasseServiceTests
         public void EchoueSansChasseurs()
         {
             var repository = new PartieDeChasseRepositoryForTests();
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             var chasseurs = new List<(string, int)>();
             var terrainDeChasse = ("Pitibon sur Sauldre", 3);
 
@@ -82,7 +85,7 @@ public class PartieDeChasseServiceTests
         public void EchoueAvecUnTerrainSansGalinettes()
         {
             var repository = new PartieDeChasseRepositoryForTests();
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             var chasseurs = new List<(string, int)>();
             var terrainDeChasse = ("Pitibon sur Sauldre", 0);
 
@@ -96,7 +99,7 @@ public class PartieDeChasseServiceTests
         public void EchoueSiChasseurSansBalle()
         {
             var repository = new PartieDeChasseRepositoryForTests();
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             var chasseurs = new List<(string, int)> { ("Dédé", 20), ("Bernard", 0) };
             var terrainDeChasse = ("Pitibon sur Sauldre", 3);
 
@@ -132,7 +135,7 @@ public class PartieDeChasseServiceTests
                 Events = []
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
 
             service.TirerSurUneGalinette(id, "Bernard");
 
@@ -181,7 +184,7 @@ public class PartieDeChasseServiceTests
         {
             var id = Guid.NewGuid();
             var repository = new PartieDeChasseRepositoryForTests();
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             Action? tirerQuandPartieExistePas = () => service.TirerSurUneGalinette(id, "Bernard");
 
             tirerQuandPartieExistePas.Should()
@@ -211,11 +214,12 @@ public class PartieDeChasseServiceTests
                 Events = []
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             Action? tirerSansBalle = () => service.TirerSurUneGalinette(id, "Bernard");
 
-            tirerSansBalle.Should()
-                .Throw<TasPlusDeBallesMonVieuxChasseALaMain>();
+            tirerSansBalle.Should().Throw<TasPlusDeBallesMonVieuxChasseALaMain>();
+            AssertLastEvent(repository.SavedPartieDeChasse()!,
+                "Bernard veut tirer sur une galinette -> T'as plus de balles mon vieux, chasse à la main");
         }
 
         [Fact]
@@ -237,7 +241,7 @@ public class PartieDeChasseServiceTests
                 Status = PartieStatus.EnCours
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             Action? tirerAlorsQuePasDeGalinettes = () => service.TirerSurUneGalinette(id, "Bernard");
 
             tirerAlorsQuePasDeGalinettes.Should()
@@ -266,7 +270,7 @@ public class PartieDeChasseServiceTests
                 Status = PartieStatus.EnCours
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             Action? chasseurInconnuVeutTirer = () => service.TirerSurUneGalinette(id, "Chasseur inconnu");
 
             chasseurInconnuVeutTirer.Should()
@@ -296,11 +300,14 @@ public class PartieDeChasseServiceTests
                 Events = []
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             Action? tirerEnPleinApéro = () => service.TirerSurUneGalinette(id, "Chasseur inconnu");
 
             tirerEnPleinApéro.Should()
                 .Throw<OnTirePasPendantLapéroCestSacré>();
+
+            AssertLastEvent(repository.SavedPartieDeChasse(),
+                "Chasseur inconnu veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!");
         }
 
         [Fact]
@@ -323,11 +330,14 @@ public class PartieDeChasseServiceTests
                 Events = []
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             Action? tirerQuandTerminée = () => service.TirerSurUneGalinette(id, "Chasseur inconnu");
 
             tirerQuandTerminée.Should()
                 .Throw<OnTirePasQuandLaPartieEstTerminée>();
+
+            AssertLastEvent(repository.SavedPartieDeChasse(),
+                "Chasseur inconnu veut tirer -> On tire pas quand la partie est terminée");
         }
     }
 
@@ -353,7 +363,7 @@ public class PartieDeChasseServiceTests
                 Events = []
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
 
             service.Tirer(id, "Bernard");
 
@@ -402,7 +412,7 @@ public class PartieDeChasseServiceTests
         {
             var id = Guid.NewGuid();
             var repository = new PartieDeChasseRepositoryForTests();
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             Action? tirerQuandPartieExistePas = () => service.Tirer(id, "Bernard");
 
             tirerQuandPartieExistePas.Should()
@@ -432,11 +442,13 @@ public class PartieDeChasseServiceTests
                 Events = []
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
-            Action? tirerSansBalle = () => service.Tirer(id, "Bernard");
+            var service = new PartieDeChasseService(repository, TimeProvider);
+            var tirerSansBalle = () => service.Tirer(id, "Bernard");
 
-            tirerSansBalle.Should()
-                .Throw<TasPlusDeBallesMonVieuxChasseALaMain>();
+            tirerSansBalle.Should().Throw<TasPlusDeBallesMonVieuxChasseALaMain>();
+            
+            AssertLastEvent(repository.SavedPartieDeChasse(),
+                "Bernard tire -> T'as plus de balles mon vieux, chasse à la main");
         }
 
         [Fact]
@@ -458,7 +470,7 @@ public class PartieDeChasseServiceTests
                 Status = PartieStatus.EnCours
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             var nomChasseurInconnu = "Chasseur inconnu";
 
             Action? chasseurInconnuVeutTirer = () => service.Tirer(id, nomChasseurInconnu);
@@ -491,11 +503,14 @@ public class PartieDeChasseServiceTests
                 Events = []
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             Action? tirerEnPleinApéro = () => service.Tirer(id, "Chasseur inconnu");
 
             tirerEnPleinApéro.Should()
                 .Throw<OnTirePasPendantLapéroCestSacré>();
+            
+            AssertLastEvent(repository.SavedPartieDeChasse(),
+                "Chasseur inconnu veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!");
         }
 
         [Fact]
@@ -518,11 +533,14 @@ public class PartieDeChasseServiceTests
                 Events = []
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             Action? tirerQuandTerminée = () => service.Tirer(id, "Chasseur inconnu");
 
             tirerQuandTerminée.Should()
                 .Throw<OnTirePasQuandLaPartieEstTerminée>();
+
+            AssertLastEvent(repository.SavedPartieDeChasse(),
+                "Chasseur inconnu veut tirer -> On tire pas quand la partie est terminée");
         }
     }
 
@@ -548,7 +566,7 @@ public class PartieDeChasseServiceTests
                 Events = []
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             service.PrendreLapéro(id);
 
             PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
@@ -596,7 +614,7 @@ public class PartieDeChasseServiceTests
         {
             var id = Guid.NewGuid();
             var repository = new PartieDeChasseRepositoryForTests();
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             Action? apéroQuandPartieExistePas = () => service.PrendreLapéro(id);
 
             apéroQuandPartieExistePas.Should()
@@ -625,7 +643,7 @@ public class PartieDeChasseServiceTests
                 Status = PartieStatus.Apéro
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             Action? prendreLApéroQuandOnPrendDéjàLapéro = () => service.PrendreLapéro(id);
 
             prendreLApéroQuandOnPrendDéjàLapéro.Should()
@@ -654,7 +672,7 @@ public class PartieDeChasseServiceTests
                 Status = PartieStatus.Terminée
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             Action? prendreLapéroQuandTerminée = () => service.PrendreLapéro(id);
 
             prendreLapéroQuandTerminée.Should()
@@ -687,7 +705,7 @@ public class PartieDeChasseServiceTests
                 Events = []
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             service.ReprendreLaPartie(id);
 
             PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
@@ -735,7 +753,7 @@ public class PartieDeChasseServiceTests
         {
             var id = Guid.NewGuid();
             var repository = new PartieDeChasseRepositoryForTests();
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             Action? reprendrePartieQuandPartieExistePas = () => service.ReprendreLaPartie(id);
 
             reprendrePartieQuandPartieExistePas.Should()
@@ -764,7 +782,7 @@ public class PartieDeChasseServiceTests
                 Status = PartieStatus.EnCours
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             Action? reprendreLaPartieQuandChasseEnCours = () => service.ReprendreLaPartie(id);
 
             reprendreLaPartieQuandChasseEnCours.Should()
@@ -794,7 +812,7 @@ public class PartieDeChasseServiceTests
                 Status = PartieStatus.Terminée
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             Action? prendreLapéroQuandTerminée = () => service.ReprendreLaPartie(id);
 
             prendreLapéroQuandTerminée.Should()
@@ -828,7 +846,7 @@ public class PartieDeChasseServiceTests
                 Events = []
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             var meilleurChasseur = service.TerminerLaPartie(id);
 
             PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
@@ -889,7 +907,7 @@ public class PartieDeChasseServiceTests
                 Events = []
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             var meilleurChasseur = service.TerminerLaPartie(id);
 
             PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
@@ -915,6 +933,9 @@ public class PartieDeChasseServiceTests
 
             meilleurChasseur.Should()
                 .Be("Robert");
+            
+            AssertLastEvent(repository.SavedPartieDeChasse(),
+                "La partie de chasse est terminée, vainqueur : Robert - 2 galinettes");
         }
 
         [Fact]
@@ -937,7 +958,7 @@ public class PartieDeChasseServiceTests
                 Events = []
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             var meilleurChasseur = service.TerminerLaPartie(id);
 
             PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
@@ -981,6 +1002,9 @@ public class PartieDeChasseServiceTests
 
             meilleurChasseur.Should()
                 .Be("Dédé, Bernard");
+            
+            AssertLastEvent(repository.SavedPartieDeChasse(),
+                "La partie de chasse est terminée, vainqueur : Dédé - 2 galinettes, Bernard - 2 galinettes");
         }
 
         [Fact]
@@ -1003,7 +1027,7 @@ public class PartieDeChasseServiceTests
                 Events = []
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             var meilleurChasseur = service.TerminerLaPartie(id);
 
             PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
@@ -1047,6 +1071,8 @@ public class PartieDeChasseServiceTests
 
             meilleurChasseur.Should()
                 .Be("Brocouille");
+            AssertLastEvent(repository.SavedPartieDeChasse(),
+                "La partie de chasse est terminée, vainqueur : Brocouille");
         }
 
         [Fact]
@@ -1069,7 +1095,7 @@ public class PartieDeChasseServiceTests
                 Events = []
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             var meilleurChasseur = service.TerminerLaPartie(id);
 
             PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
@@ -1134,7 +1160,7 @@ public class PartieDeChasseServiceTests
                 Status = PartieStatus.Terminée
             });
 
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             Func<string>? prendreLapéroQuandTerminée = () => service.TerminerLaPartie(id);
 
             prendreLapéroQuandTerminée.Should()
@@ -1153,7 +1179,7 @@ public class PartieDeChasseServiceTests
         {
             var id = Guid.NewGuid();
             var repository = new PartieDeChasseRepositoryForTests();
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
 
             repository.Add(new PartieDeChasse
             {
@@ -1186,7 +1212,7 @@ public class PartieDeChasseServiceTests
         {
             var id = Guid.NewGuid();
             var repository = new PartieDeChasseRepositoryForTests();
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
 
             repository.Add(new PartieDeChasse
             {
@@ -1263,7 +1289,7 @@ public class PartieDeChasseServiceTests
         {
             var id = Guid.NewGuid();
             var repository = new PartieDeChasseRepositoryForTests();
-            var service = new PartieDeChasseService(repository, () => DateTime.Now);
+            var service = new PartieDeChasseService(repository, TimeProvider);
             Func<string>? reprendrePartieQuandPartieExistePas = () => service.ConsulterStatus(id);
 
             reprendrePartieQuandPartieExistePas.Should()
@@ -1272,5 +1298,14 @@ public class PartieDeChasseServiceTests
                 .Should()
                 .BeNull();
         }
+    }
+    
+    private static void AssertLastEvent(PartieDeChasse partieDeChasse,
+        string expectedMessage)
+    {
+        partieDeChasse.Events.Should()
+            .HaveCount(1)
+            .And
+            .EndWith(new Event(Now, expectedMessage));
     }
 }
