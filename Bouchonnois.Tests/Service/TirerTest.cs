@@ -3,10 +3,14 @@ using Bouchonnois.Service;
 using Bouchonnois.Service.Exceptions;
 using Bouchonnois.Tests.Doubles;
 
+using static Bouchonnois.Tests.Service.PartieDeChasseDataBuilder;
+
 namespace Bouchonnois.Tests.Service;
 
 public class PartieDeChasseDataBuilder
 {
+    private Terrain Terrain;
+
     public PartieDeChasseDataBuilder AvecUnChasseurAyantDesBalles()
     {
         Chasseurs.Add(new Chasseur { Nom = "Dédé", BallesRestantes = 20 });
@@ -15,9 +19,10 @@ public class PartieDeChasseDataBuilder
 
     public PartieDeChasseDataBuilder EtUnTerrainAvecDesGalinettes()
     {
+        Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3, };
         return this;
     }
-
+    
     private List<Chasseur> Chasseurs { get; set; } = new();
     
     public PartieDeChasse Build()
@@ -26,11 +31,13 @@ public class PartieDeChasseDataBuilder
         {
             Id = Guid.NewGuid(),
             Chasseurs = Chasseurs,
-            Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3, },
+            Terrain = Terrain,
             Status = PartieStatus.EnCours,
             Events = [],
         };
     }
+
+    public static PartieDeChasseDataBuilder UnePartieDeChasse() => new PartieDeChasseDataBuilder();
 }
 
 public class TirerTest : PartieDeChasseServiceTests
@@ -40,7 +47,7 @@ public class TirerTest : PartieDeChasseServiceTests
     {
         var repository = new PartieDeChasseRepositoryForTests();
 
-        var unePartieDeChasseAvecDesChasseursAyantDesBalles = new PartieDeChasseDataBuilder()
+        var unePartieDeChasseAvecDesChasseursAyantDesBalles = UnePartieDeChasse()
             .AvecUnChasseurAyantDesBalles()
             .EtUnTerrainAvecDesGalinettes()
             .Build();
