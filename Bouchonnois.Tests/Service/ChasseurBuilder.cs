@@ -2,7 +2,7 @@
 
 namespace Bouchonnois.Tests.Service;
 
-internal class ChasseurBuilder
+public class ChasseurBuilder
 {
     private readonly int _ballesRestantes;
     private readonly string? _nom;
