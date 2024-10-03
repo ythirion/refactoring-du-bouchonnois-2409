@@ -9,40 +9,42 @@ namespace Bouchonnois.Tests.Service;
 
 public class PartieDeChasseDataBuilder
 {
-    private Terrain _terrain = new()
-    {
-        Nom = "Pitibon sur Sauldre"
-    };
-
     private readonly List<Chasseur> _chasseurs = [];
+    private Terrain _terrain = new() { Nom = "Pitibon sur Sauldre", };
 
     public PartieDeChasseDataBuilder AvecUnChasseurAyantDesBalles()
     {
-        _chasseurs.Add(new Chasseur { Nom = "Dédé", BallesRestantes = 20 });
-        return this;
-    }
+        _chasseurs.Add(new Chasseur { Nom = "Dédé", BallesRestantes = 20, });
+        _chasseurs.Add(new Chasseur { Nom = "Bernard", BallesRestantes = 8, });
+        _chasseurs.Add(new Chasseur { Nom = "Robert", BallesRestantes = 12, });
 
-    public PartieDeChasseDataBuilder EtUnTerrainAvecDesGalinettes()
-    {
-        _terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3, };
         return this;
     }
 
     public PartieDeChasse Build()
     {
         return new PartieDeChasse
-        {
-            Id = Guid.NewGuid(),
-            Chasseurs = _chasseurs,
-            Terrain = _terrain,
-            Status = PartieStatus.EnCours,
-            Events = [],
-        };
+               {
+                   Id = Guid.NewGuid(),
+                   Chasseurs = _chasseurs,
+                   Terrain = _terrain,
+                   Status = PartieStatus.EnCours,
+                   Events = [],
+               };
     }
 
-    public static PartieDeChasseDataBuilder UnePartieDeChasse() => new();
-}
+    public PartieDeChasseDataBuilder EtUnTerrainAvecDesGalinettes()
+    {
+        _terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3, };
 
+        return this;
+    }
+
+    public static PartieDeChasseDataBuilder UnePartieDeChasse()
+    {
+        return new PartieDeChasseDataBuilder();
+    }
+}
 public class TirerTest : PartieDeChasseServiceTests
 {
     [Fact]
@@ -50,13 +52,13 @@ public class TirerTest : PartieDeChasseServiceTests
     {
         var repository = new PartieDeChasseRepositoryForTests();
 
-        var unePartieDeChasseAvecDesChasseursAyantDesBalles = UnePartieDeChasse()
-            .AvecUnChasseurAyantDesBalles()
-            .EtUnTerrainAvecDesGalinettes()
-            .Build();
-        
-        var id = unePartieDeChasseAvecDesChasseursAyantDesBalles.Id;
-        
+        PartieDeChasse unePartieDeChasseAvecDesChasseursAyantDesBalles = UnePartieDeChasse()
+                                                                         .AvecUnChasseurAyantDesBalles()
+                                                                         .EtUnTerrainAvecDesGalinettes()
+                                                                         .Build();
+
+        Guid id = unePartieDeChasseAvecDesChasseursAyantDesBalles.Id;
+
         repository.Add(unePartieDeChasseAvecDesChasseursAyantDesBalles);
 
         var service = new PartieDeChasseService(repository, TimeProvider);
@@ -143,8 +145,7 @@ public class TirerTest : PartieDeChasseServiceTests
         tirerSansBalle.Should()
                       .Throw<TasPlusDeBallesMonVieuxChasseALaMain>();
 
-        AssertLastEvent(repository.SavedPartieDeChasse(),
-                        "Bernard tire -> T'as plus de balles mon vieux, chasse à la main");
+        AssertLastEvent(repository.SavedPartieDeChasse(), "Bernard tire -> T'as plus de balles mon vieux, chasse à la main");
     }
 
     [Fact]
@@ -222,8 +223,7 @@ public class TirerTest : PartieDeChasseServiceTests
         tirerQuandTerminée.Should()
                           .Throw<OnTirePasQuandLaPartieEstTerminée>();
 
-        AssertLastEvent(repository.SavedPartieDeChasse(),
-                        "Chasseur inconnu veut tirer -> On tire pas quand la partie est terminée");
+        AssertLastEvent(repository.SavedPartieDeChasse(), "Chasseur inconnu veut tirer -> On tire pas quand la partie est terminée");
     }
 
     [Fact]
@@ -252,8 +252,6 @@ public class TirerTest : PartieDeChasseServiceTests
         tirerEnPleinApéro.Should()
                          .Throw<OnTirePasPendantLapéroCestSacré>();
 
-        AssertLastEvent(repository.SavedPartieDeChasse(),
-                        "Chasseur inconnu veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!");
+        AssertLastEvent(repository.SavedPartieDeChasse(), "Chasseur inconnu veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!");
     }
 }
-

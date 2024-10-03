@@ -63,20 +63,17 @@ public class ConsulterStatusTest : PartieDeChasseServiceTests
                                new Event(new DateTime(2024, 4, 25, 14, 41, 4), "Bernard tire"),
                                new Event(new DateTime(2024, 4, 25, 14, 41, 5), "Bernard tire"),
                                new Event(new DateTime(2024, 4, 25, 14, 41, 6), "Bernard tire"),
-                               new Event(new DateTime(2024, 4, 25, 14, 41, 7),
-                                         "Bernard tire -> T'as plus de balles mon vieux, chasse à la main"),
+                               new Event(new DateTime(2024, 4, 25, 14, 41, 7), "Bernard tire -> T'as plus de balles mon vieux, chasse à la main"),
 
                                new Event(new DateTime(2024, 4, 25, 15, 0, 0), "Robert tire sur une galinette"),
-                               new Event(new DateTime(2024, 4, 25, 15, 30, 0),
-                                         "La partie de chasse est terminée, vainqueur :  Robert - 3 galinettes"),
+                               new Event(new DateTime(2024, 4, 25, 15, 30, 0), "La partie de chasse est terminée, vainqueur :  Robert - 3 galinettes"),
                            ],
                        });
 
         var status = service.ConsulterStatus(id);
 
         status.Should()
-              .BeEquivalentTo(
-                  @"15:30 - La partie de chasse est terminée, vainqueur :  Robert - 3 galinettes
+              .BeEquivalentTo(@"15:30 - La partie de chasse est terminée, vainqueur :  Robert - 3 galinettes
 15:00 - Robert tire sur une galinette
 14:41 - Bernard tire -> T'as plus de balles mon vieux, chasse à la main
 14:41 - Bernard tire
@@ -96,8 +93,7 @@ public class ConsulterStatusTest : PartieDeChasseServiceTests
 10:00 - Petit apéro
 09:40 - Robert tire sur une galinette
 09:10 - Dédé tire
-09:00 - La partie de chasse commence à Pitibon sur Sauldre avec Dédé (20 balles), Bernard (8 balles), Robert (12 balles)"
-              );
+09:00 - La partie de chasse commence à Pitibon sur Sauldre avec Dédé (20 balles), Bernard (8 balles), Robert (12 balles)");
     }
 
     [Fact]
@@ -128,8 +124,6 @@ public class ConsulterStatusTest : PartieDeChasseServiceTests
         var status = service.ConsulterStatus(id);
 
         status.Should()
-              .Be(
-                  "09:00 - La partie de chasse commence à Pitibon sur Sauldre avec Dédé (20 balles), Bernard (8 balles), Robert (12 balles)"
-              );
+              .Be("09:00 - La partie de chasse commence à Pitibon sur Sauldre avec Dédé (20 balles), Bernard (8 balles), Robert (12 balles)");
     }
 }
