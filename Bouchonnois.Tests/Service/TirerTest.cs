@@ -37,7 +37,7 @@ public class PartieDeChasseDataBuilder
         };
     }
 
-    public static PartieDeChasseDataBuilder UnePartieDeChasse() => new PartieDeChasseDataBuilder();
+    public static PartieDeChasseDataBuilder UnePartieDeChasse() => new PartieDeChasseDataBuilder(); 
 }
 
 public class TirerTest : PartieDeChasseServiceTests
