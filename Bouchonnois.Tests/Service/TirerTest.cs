@@ -9,35 +9,38 @@ namespace Bouchonnois.Tests.Service;
 
 public class PartieDeChasseDataBuilder
 {
-    private Terrain Terrain;
+    private Terrain _terrain = new()
+    {
+        Nom = "Pitibon sur Sauldre"
+    };
+
+    private readonly List<Chasseur> _chasseurs = [];
 
     public PartieDeChasseDataBuilder AvecUnChasseurAyantDesBalles()
     {
-        Chasseurs.Add(new Chasseur { Nom = "Dédé", BallesRestantes = 20 });
+        _chasseurs.Add(new Chasseur { Nom = "Dédé", BallesRestantes = 20 });
         return this;
     }
 
     public PartieDeChasseDataBuilder EtUnTerrainAvecDesGalinettes()
     {
-        Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3, };
+        _terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3, };
         return this;
     }
-    
-    private List<Chasseur> Chasseurs { get; set; } = new();
-    
+
     public PartieDeChasse Build()
     {
         return new PartieDeChasse
         {
             Id = Guid.NewGuid(),
-            Chasseurs = Chasseurs,
-            Terrain = Terrain,
+            Chasseurs = _chasseurs,
+            Terrain = _terrain,
             Status = PartieStatus.EnCours,
             Events = [],
         };
     }
 
-    public static PartieDeChasseDataBuilder UnePartieDeChasse() => new PartieDeChasseDataBuilder();
+    public static PartieDeChasseDataBuilder UnePartieDeChasse() => new();
 }
 
 public class TirerTest : PartieDeChasseServiceTests
