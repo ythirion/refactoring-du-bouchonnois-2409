@@ -5,27 +5,49 @@ using Bouchonnois.Tests.Doubles;
 
 namespace Bouchonnois.Tests.Service;
 
+public class PartieDeChasseDataBuilder
+{
+    public PartieDeChasseDataBuilder AvecUnChasseurAyantDesBalles()
+    {
+        Chasseurs.Add(new Chasseur { Nom = "Dédé", BallesRestantes = 20 });
+        return this;
+    }
+
+    public PartieDeChasseDataBuilder EtUnTerrainAvecDesGalinettes()
+    {
+        return this;
+    }
+
+    private List<Chasseur> Chasseurs { get; set; } = new();
+    
+    public PartieDeChasse Build()
+    {
+        return new PartieDeChasse
+        {
+            Id = Guid.NewGuid(),
+            Chasseurs = Chasseurs,
+            Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3, },
+            Status = PartieStatus.EnCours,
+            Events = [],
+        };
+    }
+}
+
 public class TirerTest : PartieDeChasseServiceTests
 {
     [Fact]
     public void AvecUnChasseurAyantDesBalles()
     {
-        var id = Guid.NewGuid();
         var repository = new PartieDeChasseRepositoryForTests();
 
-        repository.Add(new PartieDeChasse
-                       {
-                           Id = id,
-                           Chasseurs =
-                           [
-                               new Chasseur { Nom = "Dédé", BallesRestantes = 20, },
-                               new Chasseur { Nom = "Bernard", BallesRestantes = 8, },
-                               new Chasseur { Nom = "Robert", BallesRestantes = 12, },
-                           ],
-                           Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3, },
-                           Status = PartieStatus.EnCours,
-                           Events = [],
-                       });
+        var unePartieDeChasseAvecDesChasseursAyantDesBalles = new PartieDeChasseDataBuilder()
+            .AvecUnChasseurAyantDesBalles()
+            .EtUnTerrainAvecDesGalinettes()
+            .Build();
+        
+        var id = unePartieDeChasseAvecDesChasseursAyantDesBalles.Id;
+        
+        repository.Add(unePartieDeChasseAvecDesChasseursAyantDesBalles);
 
         var service = new PartieDeChasseService(repository, TimeProvider);
 
@@ -224,3 +246,4 @@ public class TirerTest : PartieDeChasseServiceTests
                         "Chasseur inconnu veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!");
     }
 }
+
