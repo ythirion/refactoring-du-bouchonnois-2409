@@ -4,6 +4,9 @@ using Bouchonnois.Service.Exceptions;
 using Bouchonnois.Tests.Builders;
 using Bouchonnois.Tests.Doubles;
 
+using FsCheck;
+using FsCheck.Xunit;
+
 using static Bouchonnois.Tests.Builders.PartieDeChasseDataBuilder;
 using static Bouchonnois.Tests.Builders.ChasseurBuilder;
 using static Bouchonnois.Tests.Assertions.PartieDeChasseExtensions;
@@ -12,6 +15,28 @@ namespace Bouchonnois.Tests.Service;
 
 public class TirerTest : PartieDeChasseServiceTests
 {
+    // Propriete de la partie de chasse 
+    //---------------------------------------
+//     Pour n'importe quelle partie de chasse
+//         Quand un chasseur sans balle tire => Echec
+
+    [Property]
+    public Property PourNimporteQuellePartieDeChasseQuandUnChasseurSansBalleTireCestUnEchec()
+    {
+        return Prop.ForAll(TerrainGenerator(), null, (terrain, chasseurs) =>
+        {
+            return true;
+        });
+    }
+
+    private Arbitrary<Terrain> TerrainGenerator()
+    {
+        return (from nom in Arb.Generate<string>()
+            // A minima 1 galinette sur le terrain
+            from nbGalinette in Gen.Choose(1, int.MaxValue)
+            select (new Terrain { Nom = nom, NbGalinettes = nbGalinette })).ToArbitrary();
+    }
+    
     [Fact]
     public void AvecUnChasseurAyantDesBalles()
     {

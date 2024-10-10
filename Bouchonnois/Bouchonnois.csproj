@@ -10,4 +10,9 @@
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="FsCheck" Version="2.16.6" />
+      <PackageReference Include="FsCheck.Xunit" Version="2.16.6" />
+    </ItemGroup>
+
 </Project>
