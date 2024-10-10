@@ -10,6 +10,7 @@ using FsCheck.Xunit;
 using static Bouchonnois.Tests.Builders.PartieDeChasseDataBuilder;
 using static Bouchonnois.Tests.Builders.ChasseurBuilder;
 using static Bouchonnois.Tests.Assertions.PartieDeChasseExtensions;
+using Microsoft.FSharp.Collections;
 
 namespace Bouchonnois.Tests.Service;
 
@@ -17,13 +18,13 @@ public class TirerTest : PartieDeChasseServiceTests
 {
     // Propriete de la partie de chasse 
     //---------------------------------------
-//     Pour n'importe quelle partie de chasse
-//         Quand un chasseur sans balle tire => Echec
+    //     Pour n'importe quelle partie de chasse
+    //         Quand un chasseur sans balle tire => Echec
 
     [Property]
     public Property PourNimporteQuellePartieDeChasseQuandUnChasseurSansBalleTireCestUnEchec()
     {
-        return Prop.ForAll(TerrainGenerator(), null, (terrain, chasseurs) =>
+        return Prop.ForAll(TerrainGenerator(), ChasseurGenerator(), (terrain, chasseurs) =>
         {
             return true;
         });
@@ -32,11 +33,23 @@ public class TirerTest : PartieDeChasseServiceTests
     private Arbitrary<Terrain> TerrainGenerator()
     {
         return (from nom in Arb.Generate<string>()
-            // A minima 1 galinette sur le terrain
-            from nbGalinette in Gen.Choose(1, int.MaxValue)
-            select (new Terrain { Nom = nom, NbGalinettes = nbGalinette })).ToArbitrary();
+                    // A minima 1 galinette sur le terrain
+                from nbGalinette in Gen.Choose(1, int.MaxValue)
+                select (new Terrain { Nom = nom, NbGalinettes = nbGalinette })).ToArbitrary();
     }
-    
+
+    private static Arbitrary<Chasseur> ChasseurGenerator()
+        => (from nom in Arb.Generate<string>()
+                // A minima 1 balle
+            from nbBalles in Gen.Choose(1, int.MaxValue)
+            select new Chasseur() { Nom = nom, BallesRestantes = nbBalles }).ToArbitrary();
+
+    private static Arbitrary<FSharpList<Chasseur>> groupeDeChasseursGenerator()
+        => // On définit le nombre de chasseurs dans le groupe [1; 1000]
+        (from nbChasseurs in Gen.Choose(1, 1_000)
+             // On utilise le nombre de chasseurs pour générer le bon nombre de chasseurs
+         select ChasseurGenerator().Generator.Sample(1, nbChasseurs)).ToArbitrary();
+
     [Fact]
     public void AvecUnChasseurAyantDesBalles()
     {
@@ -77,7 +90,7 @@ public class TirerTest : PartieDeChasseServiceTests
                 new Chasseur {Nom = "Bernard", BallesRestantes = 0,},
                 new Chasseur {Nom = "Robert", BallesRestantes = 12,},
             ],
-            Terrain = new Terrain {Nom = "Pitibon sur Sauldre", NbGalinettes = 3,},
+            Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3, },
             Status = PartieStatus.EnCours,
             Events = [],
         });
@@ -107,7 +120,7 @@ public class TirerTest : PartieDeChasseServiceTests
                 new Chasseur {Nom = "Bernard", BallesRestantes = 8,},
                 new Chasseur {Nom = "Robert", BallesRestantes = 12,},
             ],
-            Terrain = new Terrain {Nom = "Pitibon sur Sauldre", NbGalinettes = 3,},
+            Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3, },
             Status = PartieStatus.EnCours,
         });
 
@@ -156,7 +169,7 @@ public class TirerTest : PartieDeChasseServiceTests
                 new Chasseur {Nom = "Bernard", BallesRestantes = 8,},
                 new Chasseur {Nom = "Robert", BallesRestantes = 12,},
             ],
-            Terrain = new Terrain {Nom = "Pitibon sur Sauldre", NbGalinettes = 3,},
+            Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3, },
             Status = PartieStatus.Terminée,
             Events = [],
         });
@@ -186,7 +199,7 @@ public class TirerTest : PartieDeChasseServiceTests
                 new Chasseur {Nom = "Bernard", BallesRestantes = 8,},
                 new Chasseur {Nom = "Robert", BallesRestantes = 12,},
             ],
-            Terrain = new Terrain {Nom = "Pitibon sur Sauldre", NbGalinettes = 3,},
+            Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3, },
             Status = PartieStatus.Apéro,
             Events = [],
         });
