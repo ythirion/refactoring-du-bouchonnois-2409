@@ -18,7 +18,7 @@ public class ConsulterStatusTest : PartieDeChasseServiceTests
         reprendrePartieQuandPartieExistePas.Should()
             .Throw<LaPartieDeChasseNexistePas>();
 
-        repository.HasSavedPartieDeChasse()
+        repository.SavedPartieDeChasse()
             .Should()
             .BeNull();
     }

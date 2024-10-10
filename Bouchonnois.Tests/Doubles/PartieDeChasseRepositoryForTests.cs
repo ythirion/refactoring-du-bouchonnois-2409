@@ -26,8 +26,13 @@ public class PartieDeChasseRepositoryForTests : IPartieDeChasseRepository
         _partiesDeChasse[partieDeChasse.Id] = partieDeChasse;
     }
 
-    public PartieDeChasse HasSavedPartieDeChasse()
+    public PartieDeChasse SavedPartieDeChasse()
     {
         return _savedPartieDeChasse!;
+    }
+
+    public bool HasNotSavedPartieDeChasse()
+    {
+        return _savedPartieDeChasse == null;
     }
 }

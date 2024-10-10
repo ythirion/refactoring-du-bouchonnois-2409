@@ -18,7 +18,7 @@ public class PrendreLaperoTest : PartieDeChasseServiceTests
         apéroQuandPartieExistePas.Should()
             .Throw<LaPartieDeChasseNexistePas>();
 
-        repository.HasSavedPartieDeChasse()
+        repository.SavedPartieDeChasse()
             .Should()
             .BeNull();
     }
@@ -48,7 +48,7 @@ public class PrendreLaperoTest : PartieDeChasseServiceTests
         prendreLapéroQuandTerminée.Should()
             .Throw<OnPrendPasLapéroQuandLaPartieEstTerminée>();
 
-        repository.HasSavedPartieDeChasse()
+        repository.SavedPartieDeChasse()
             .Should()
             .BeNull();
     }
@@ -78,7 +78,7 @@ public class PrendreLaperoTest : PartieDeChasseServiceTests
         prendreLApéroQuandOnPrendDéjàLapéro.Should()
             .Throw<OnEstDéjàEnTrainDePrendreLapéro>();
 
-        repository.HasSavedPartieDeChasse()
+        repository.SavedPartieDeChasse()
             .Should()
             .BeNull();
     }
@@ -106,7 +106,7 @@ public class PrendreLaperoTest : PartieDeChasseServiceTests
         var service = new PartieDeChasseService(repository, TimeProvider);
         service.PrendreLapéro(id);
 
-        PartieDeChasse? savedPartieDeChasse = repository.HasSavedPartieDeChasse();
+        PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
 
         savedPartieDeChasse.Id.Should()
             .Be(id);

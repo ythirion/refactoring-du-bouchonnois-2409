@@ -18,7 +18,7 @@ public class ReprendreLaPartieDeChasseTest : PartieDeChasseServiceTests
         reprendrePartieQuandPartieExistePas.Should()
             .Throw<LaPartieDeChasseNexistePas>();
 
-        repository.HasSavedPartieDeChasse()
+        repository.SavedPartieDeChasse()
             .Should()
             .BeNull();
     }
@@ -48,7 +48,7 @@ public class ReprendreLaPartieDeChasseTest : PartieDeChasseServiceTests
         reprendreLaPartieQuandChasseEnCours.Should()
             .Throw<LaChasseEstDéjàEnCours>();
 
-        repository.HasSavedPartieDeChasse()
+        repository.SavedPartieDeChasse()
             .Should()
             .BeNull();
     }
@@ -78,7 +78,7 @@ public class ReprendreLaPartieDeChasseTest : PartieDeChasseServiceTests
         prendreLapéroQuandTerminée.Should()
             .Throw<QuandCestFiniCestFini>();
 
-        repository.HasSavedPartieDeChasse()
+        repository.SavedPartieDeChasse()
             .Should()
             .BeNull();
     }
@@ -106,7 +106,7 @@ public class ReprendreLaPartieDeChasseTest : PartieDeChasseServiceTests
         var service = new PartieDeChasseService(repository, TimeProvider);
         service.ReprendreLaPartie(id);
 
-        PartieDeChasse? savedPartieDeChasse = repository.HasSavedPartieDeChasse();
+        PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
 
         savedPartieDeChasse.Id.Should()
             .Be(id);

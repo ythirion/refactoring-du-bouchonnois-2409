@@ -32,7 +32,7 @@ public class TerminerLaPartieDeChasseTest : PartieDeChasseServiceTests
         prendreLapéroQuandTerminée.Should()
             .Throw<QuandCestFiniCestFini>();
 
-        repository.HasSavedPartieDeChasse()
+        repository.SavedPartieDeChasse()
             .Should()
             .BeNull();
     }
@@ -55,7 +55,7 @@ public class TerminerLaPartieDeChasseTest : PartieDeChasseServiceTests
         var service = new PartieDeChasseService(repository, TimeProvider);
         var meilleurChasseur = service.TerminerLaPartie(id);
 
-        PartieDeChasse? savedPartieDeChasse = repository.HasSavedPartieDeChasse();
+        PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
 
         savedPartieDeChasse.Id.Should()
             .Be(id);
@@ -87,7 +87,7 @@ public class TerminerLaPartieDeChasseTest : PartieDeChasseServiceTests
         meilleurChasseur.Should()
             .Be("Robert");
 
-        AssertLastEvent(repository.HasSavedPartieDeChasse(),
+        AssertLastEvent(repository.SavedPartieDeChasse(),
             "La partie de chasse est terminée, vainqueur : Robert - 2 galinettes");
     }
 
@@ -114,7 +114,7 @@ public class TerminerLaPartieDeChasseTest : PartieDeChasseServiceTests
         var service = new PartieDeChasseService(repository, TimeProvider);
         var meilleurChasseur = service.TerminerLaPartie(id);
 
-        PartieDeChasse? savedPartieDeChasse = repository.HasSavedPartieDeChasse();
+        PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
 
         savedPartieDeChasse.Id.Should()
             .Be(id);
@@ -194,7 +194,7 @@ public class TerminerLaPartieDeChasseTest : PartieDeChasseServiceTests
         var service = new PartieDeChasseService(repository, TimeProvider);
         var meilleurChasseur = service.TerminerLaPartie(id);
 
-        PartieDeChasse? savedPartieDeChasse = repository.HasSavedPartieDeChasse();
+        PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
 
         savedPartieDeChasse.Id.Should()
             .Be(id);
@@ -250,7 +250,7 @@ public class TerminerLaPartieDeChasseTest : PartieDeChasseServiceTests
         meilleurChasseur.Should()
             .Be("Dédé, Bernard");
 
-        AssertLastEvent(repository.HasSavedPartieDeChasse(),
+        AssertLastEvent(repository.SavedPartieDeChasse(),
             "La partie de chasse est terminée, vainqueur : Dédé - 2 galinettes, Bernard - 2 galinettes");
     }
 
@@ -277,7 +277,7 @@ public class TerminerLaPartieDeChasseTest : PartieDeChasseServiceTests
         var service = new PartieDeChasseService(repository, TimeProvider);
         var meilleurChasseur = service.TerminerLaPartie(id);
 
-        PartieDeChasse? savedPartieDeChasse = repository.HasSavedPartieDeChasse();
+        PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
 
         savedPartieDeChasse.Id.Should()
             .Be(id);
@@ -333,7 +333,7 @@ public class TerminerLaPartieDeChasseTest : PartieDeChasseServiceTests
         meilleurChasseur.Should()
             .Be("Brocouille");
 
-        AssertLastEvent(repository.HasSavedPartieDeChasse(),
+        AssertLastEvent(repository.SavedPartieDeChasse(),
             "La partie de chasse est terminée, vainqueur : Brocouille");
     }
 
@@ -360,7 +360,7 @@ public class TerminerLaPartieDeChasseTest : PartieDeChasseServiceTests
         var service = new PartieDeChasseService(repository, TimeProvider);
         var meilleurChasseur = service.TerminerLaPartie(id);
 
-        PartieDeChasse? savedPartieDeChasse = repository.HasSavedPartieDeChasse();
+        PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
 
         savedPartieDeChasse.Id.Should()
             .Be(id);

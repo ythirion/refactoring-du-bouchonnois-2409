@@ -31,7 +31,7 @@ public class TirerSurUneGalinetteTest : PartieDeChasseServiceTests
 
         service.TirerSurUneGalinette(id, "Bernard");
 
-        PartieDeChasse? savedPartieDeChasse = repository.HasSavedPartieDeChasse();
+        PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
 
         savedPartieDeChasse.Id.Should()
             .Be(id);
@@ -111,7 +111,7 @@ public class TirerSurUneGalinetteTest : PartieDeChasseServiceTests
         tirerSansBalle.Should()
             .Throw<TasPlusDeBallesMonVieuxChasseALaMain>();
 
-        AssertLastEvent(repository.HasSavedPartieDeChasse()!,
+        AssertLastEvent(repository.SavedPartieDeChasse()!,
             "Bernard veut tirer sur une galinette -> T'as plus de balles mon vieux, chasse à la main");
     }
 
@@ -140,7 +140,7 @@ public class TirerSurUneGalinetteTest : PartieDeChasseServiceTests
         chasseurInconnuVeutTirer.Should()
             .Throw<ChasseurInconnu>();
 
-        repository.HasSavedPartieDeChasse()
+        repository.SavedPartieDeChasse()
             .Should()
             .BeNull();
     }
@@ -156,7 +156,7 @@ public class TirerSurUneGalinetteTest : PartieDeChasseServiceTests
         tirerQuandPartieExistePas.Should()
             .Throw<LaPartieDeChasseNexistePas>();
 
-        repository.HasSavedPartieDeChasse()
+        repository.SavedPartieDeChasse()
             .Should()
             .BeNull();
     }
@@ -186,7 +186,7 @@ public class TirerSurUneGalinetteTest : PartieDeChasseServiceTests
         tirerAlorsQuePasDeGalinettes.Should()
             .Throw<TasTropPicoléMonVieuxTasRienTouché>();
 
-        repository.HasSavedPartieDeChasse()
+        repository.SavedPartieDeChasse()
             .Should()
             .BeNull();
     }
@@ -217,7 +217,7 @@ public class TirerSurUneGalinetteTest : PartieDeChasseServiceTests
         tirerQuandTerminée.Should()
             .Throw<OnTirePasQuandLaPartieEstTerminée>();
 
-        AssertLastEvent(repository.HasSavedPartieDeChasse(),
+        AssertLastEvent(repository.SavedPartieDeChasse(),
             "Chasseur inconnu veut tirer -> On tire pas quand la partie est terminée");
     }
 
@@ -247,7 +247,7 @@ public class TirerSurUneGalinetteTest : PartieDeChasseServiceTests
         tirerEnPleinApéro.Should()
             .Throw<OnTirePasPendantLapéroCestSacré>();
 
-        AssertLastEvent(repository.HasSavedPartieDeChasse(),
+        AssertLastEvent(repository.SavedPartieDeChasse(),
             "Chasseur inconnu veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!");
     }
 }

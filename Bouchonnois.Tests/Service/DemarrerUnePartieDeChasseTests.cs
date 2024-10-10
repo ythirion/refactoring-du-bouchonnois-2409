@@ -20,7 +20,7 @@ public class DemarrerUnePartieDeChasseTest : PartieDeChasseServiceTests
             chasseurs
         );
 
-        PartieDeChasse? savedPartieDeChasse = repository.HasSavedPartieDeChasse();
+        PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
 
         savedPartieDeChasse.Id.Should()
             .Be(id);
@@ -101,7 +101,7 @@ public class DemarrerUnePartieDeChasseTest : PartieDeChasseServiceTests
         demarrerPartieSansChasseurs.Should()
             .Throw<ImpossibleDeDémarrerUnePartieSansChasseur>();
 
-        repository.HasSavedPartieDeChasse()
+        repository.SavedPartieDeChasse()
             .Should()
             .BeNull();
     }
@@ -119,7 +119,7 @@ public class DemarrerUnePartieDeChasseTest : PartieDeChasseServiceTests
         demarrerPartieAvecChasseurSansBalle.Should()
             .Throw<ImpossibleDeDémarrerUnePartieAvecUnChasseurSansBalle>();
 
-        repository.HasSavedPartieDeChasse()
+        repository.SavedPartieDeChasse()
             .Should()
             .BeNull();
     }
