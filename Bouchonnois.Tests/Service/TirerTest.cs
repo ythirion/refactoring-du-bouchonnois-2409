@@ -30,7 +30,7 @@ public class TirerTest : PartieDeChasseServiceTests
     {
         var nbGalinettes = 2;
         var unePartieDeChasseAvecDesChasseursAyantDesBalles = UnePartieDeChasse()
-            .AvecDesChasseursAyantDesBalles(Dédé(), Bernard(), Robert())
+            .AvecDesChasseurs(Dédé(), Bernard(), Robert())
             .EtUnTerrainAvecDesGalinettes(nbGalinettes)
             .Build();
         _repository.Add(unePartieDeChasseAvecDesChasseursAyantDesBalles);
@@ -51,7 +51,7 @@ public class TirerTest : PartieDeChasseServiceTests
     public void EchoueAvecUnChasseurNayantPlusDeBalles()
     {
         var partieDeChasse = UnePartieDeChasse()
-            .AvecDesChasseursAyantDesBalles(Dédé(),
+            .AvecDesChasseurs(Dédé(),
                 Bernard()
                     .SansBalles()
             )
@@ -74,7 +74,7 @@ public class TirerTest : PartieDeChasseServiceTests
     public void EchoueCarLeChasseurNestPasDansLaPartie()
     {
         var partieDeChasse = UnePartieDeChasse()
-            .AvecDesChasseursAyantDesBalles(
+            .AvecDesChasseurs(
                 Dédé()
             )
             .EtUnTerrainAvecDesGalinettes()
@@ -108,7 +108,7 @@ public class TirerTest : PartieDeChasseServiceTests
     public void EchoueSiLaPartieDeChasseEstTerminée()
     {
         var partieDeChasse = UnePartieDeChasse()
-            .AvecDesChasseursAyantDesBalles(
+            .AvecDesChasseurs(
                 Dédé(),
                 Bernard()
             )
@@ -130,7 +130,7 @@ public class TirerTest : PartieDeChasseServiceTests
     public void EchoueSiLesChasseursSontEnApero()
     {
         var partieDeChasse = UnePartieDeChasse()
-            .AvecDesChasseursAyantDesBalles(
+            .AvecDesChasseurs(
                 Dédé(),
                 Bernard()
             )
@@ -152,25 +152,18 @@ public class TirerTest : PartieDeChasseServiceTests
 
     [Property]
     public Property PourNimporteQuellePartieDeChasseQuandUnChasseurSansBalleTireCestUnEchec()
-        => Prop.ForAll(TerrainRicheEnGalinettesGenerator(), ChasseursSansBallesGenerator(), (terrain, chasseurs) =>
-        {
-            var partieDeChasse = UnePartieDeChasse()
-                .AvecDesChasseursAyantDesBalles(
-                    chasseurs.Select(c =>
-                            UnChasseur(c.nom)
-                                .AvecDesBalles(c.nbBalles)
-                        )
-                        .ToArray()
-                )
-                .EtUnTerrainAvecDesGalinettes(terrain.nbGalinettes)
-                .Build();
+        => Prop.ForAll(TerrainRicheEnGalinettesGenerator(), ChasseursSansBallesGenerator(),
+            (terrain, chasseurs) => EchoueAvec<TasPlusDeBallesMonVieuxChasseALaMain>(service =>
+                {
+                    var partieDeChasse = UnePartieDeChasse()
+                        .AvecDesChasseurs(chasseurs.ToChasseurBuilders())
+                        .EtUnTerrainAvecDesGalinettes(terrain.nbGalinettes)
+                        .Build();
 
-            _repository.Add(partieDeChasse);
-
-            return EchoueAvec<TasPlusDeBallesMonVieuxChasseALaMain>(service =>
-                service.Tirer(partieDeChasse.Id, chasseurs.Head.nom)
-            );
-        });
+                    _repository.Add(partieDeChasse);
+                    service.Tirer(partieDeChasse.Id, chasseurs.Head.nom);
+                }
+            ));
 
     private bool EchoueAvec<T>(Action<PartieDeChasseService> action)
         where T : Exception
@@ -215,4 +208,14 @@ public class TirerTest : PartieDeChasseServiceTests
         => GroupeDeChasseursGenerator(0, 0);
 
     #endregion
+}
+
+public static class PartieDeChasseExtensions
+{
+    public static ChasseurBuilder[] ToChasseurBuilders(this FSharpList<(string nom, int nbBalles)> chasseurs)
+        => chasseurs.Select(c =>
+                UnChasseur(c.nom)
+                    .AvecDesBalles(c.nbBalles)
+            )
+            .ToArray();
 }

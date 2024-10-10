@@ -14,7 +14,7 @@ public class PartieDeChasseBuilder
     private PartieStatus _status;
     private static readonly Faker _faker = new("fr");
 
-    public PartieDeChasseBuilder AvecDesChasseursAyantDesBalles(params ChasseurBuilder[] builders)
+    public PartieDeChasseBuilder AvecDesChasseurs(params ChasseurBuilder[] builders)
     {
         foreach ( var builder in builders )
         {
