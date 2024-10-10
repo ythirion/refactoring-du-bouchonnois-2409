@@ -1,4 +1,6 @@
-﻿using Bouchonnois.Domain;
+﻿using Bogus;
+
+using Bouchonnois.Domain;
 using Bouchonnois.Service;
 using Bouchonnois.Service.Exceptions;
 using Bouchonnois.Tests.Doubles;
@@ -11,8 +13,9 @@ namespace Bouchonnois.Tests.Service;
 public class PartieDeChasseDataBuilder
 {
     private readonly List<Chasseur> _chasseurs = [];
-    private Terrain _terrain = new() { Nom = "Pitibon sur Sauldre", };
-
+    private Terrain _terrain = new() { Nom = _faker.Address.City() };
+    private static readonly Faker _faker = new Faker("fr");
+    
     public PartieDeChasseDataBuilder AvecDesChasseursAyantDesBalles(params ChasseurBuilder[] builders)
     {
         foreach ( var builder in builders )
