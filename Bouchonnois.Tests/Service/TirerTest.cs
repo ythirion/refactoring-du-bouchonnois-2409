@@ -18,15 +18,38 @@ public class TirerTest : PartieDeChasseServiceTests
 {
     // Propriete de la partie de chasse 
     //---------------------------------------
-    //     Pour n'importe quelle partie de chasse
-    //         Quand un chasseur sans balle tire => Echec
+    //  Pour n'importe quelle partie de chasse
+    //  Quand un chasseur sans balle tire => Echec
 
     [Property]
     public Property PourNimporteQuellePartieDeChasseQuandUnChasseurSansBalleTireCestUnEchec()
     {
-        return Prop.ForAll(TerrainGenerator(), ChasseurGenerator(), (terrain, chasseurs) =>
+        return Prop.ForAll(TerrainGenerator(), GroupeDeChasseursGenerator(), (terrain, chasseurs) =>
         {
-            return true;
+            var id = Guid.NewGuid();
+            var repository = new PartieDeChasseRepositoryForTests();
+
+            repository.Add(new PartieDeChasse
+            {
+                Id = id,
+                Chasseurs = chasseurs.ToList(),
+                Terrain = terrain,
+                Status = PartieStatus.EnCours,
+                Events = [],
+            });
+
+            var service = new PartieDeChasseService(repository, TimeProvider);
+
+            try
+            {
+                service.Tirer(id, chasseurs.Head.Nom);
+            }
+            catch ( TasPlusDeBallesMonVieuxChasseALaMain e )
+            {
+                return true;
+            }
+
+            return false;
         });
     }
 
@@ -41,10 +64,10 @@ public class TirerTest : PartieDeChasseServiceTests
     private static Arbitrary<Chasseur> ChasseurGenerator()
         => (from nom in Arb.Generate<string>()
                 // A minima 1 balle
-            from nbBalles in Gen.Choose(1, int.MaxValue)
+            from nbBalles in Gen.Choose(0, 0)
             select new Chasseur() { Nom = nom, BallesRestantes = nbBalles }).ToArbitrary();
 
-    private static Arbitrary<FSharpList<Chasseur>> groupeDeChasseursGenerator()
+    private static Arbitrary<FSharpList<Chasseur>> GroupeDeChasseursGenerator()
         => // On définit le nombre de chasseurs dans le groupe [1; 1000]
         (from nbChasseurs in Gen.Choose(1, 1_000)
              // On utilise le nombre de chasseurs pour générer le bon nombre de chasseurs
