@@ -1,6 +1,6 @@
 ﻿using Bouchonnois.Domain;
 
-namespace Bouchonnois.Tests.Service;
+namespace Bouchonnois.Tests.Builders;
 
 public class ChasseurBuilder
 {
@@ -23,7 +23,7 @@ public class ChasseurBuilder
 
     public Chasseur Build()
     {
-        return new Chasseur { BallesRestantes = _ballesRestantes, NbGalinettes = _nbGalinettes, Nom = _nom, };
+        return new Chasseur {BallesRestantes = _ballesRestantes, NbGalinettes = _nbGalinettes, Nom = _nom,};
     }
 
     // Object mothers
