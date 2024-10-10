@@ -18,7 +18,7 @@ public class ChasseurBuilder
 
     public static ChasseurBuilder Bernard()
     {
-        return new ChasseurBuilder("Bernard", 8);
+        return new ChasseurBuilder(Chasseurs.Bernard, 8);
     }
 
     public Chasseur Build()

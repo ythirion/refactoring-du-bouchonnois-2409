@@ -12,7 +12,7 @@ public class DemarrerUnePartieDeChasseTest : PartieDeChasseServiceTests
     {
         var repository = new PartieDeChasseRepositoryForTests();
         var service = new PartieDeChasseService(repository, TimeProvider);
-        var chasseurs = new List<(string, int)> { ("Dédé", 20), ("Bernard", 8), ("Robert", 12), };
+        var chasseurs = new List<(string, int)> {("Dédé", 20), ("Bernard", 8), ("Robert", 12),};
         var terrainDeChasse = ("Pitibon sur Sauldre", 3);
 
         Guid id = service.Demarrer(
@@ -20,58 +20,58 @@ public class DemarrerUnePartieDeChasseTest : PartieDeChasseServiceTests
             chasseurs
         );
 
-        PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
+        PartieDeChasse? savedPartieDeChasse = repository.HasSavedPartieDeChasse();
 
         savedPartieDeChasse.Id.Should()
-                           .Be(id);
+            .Be(id);
 
         savedPartieDeChasse.Status.Should()
-                           .Be(PartieStatus.EnCours);
+            .Be(PartieStatus.EnCours);
 
         savedPartieDeChasse.Terrain.Nom.Should()
-                           .Be("Pitibon sur Sauldre");
+            .Be("Pitibon sur Sauldre");
 
         savedPartieDeChasse.Terrain.NbGalinettes.Should()
-                           .Be(3);
+            .Be(3);
 
         savedPartieDeChasse.Chasseurs.Should()
-                           .HaveCount(3);
+            .HaveCount(3);
 
         savedPartieDeChasse.Chasseurs[0]
-                           .Nom.Should()
-                           .Be("Dédé");
+            .Nom.Should()
+            .Be("Dédé");
 
         savedPartieDeChasse.Chasseurs[0]
-                           .BallesRestantes.Should()
-                           .Be(20);
+            .BallesRestantes.Should()
+            .Be(20);
 
         savedPartieDeChasse.Chasseurs[0]
-                           .NbGalinettes.Should()
-                           .Be(0);
+            .NbGalinettes.Should()
+            .Be(0);
 
         savedPartieDeChasse.Chasseurs[1]
-                           .Nom.Should()
-                           .Be("Bernard");
+            .Nom.Should()
+            .Be("Bernard");
 
         savedPartieDeChasse.Chasseurs[1]
-                           .BallesRestantes.Should()
-                           .Be(8);
+            .BallesRestantes.Should()
+            .Be(8);
 
         savedPartieDeChasse.Chasseurs[1]
-                           .NbGalinettes.Should()
-                           .Be(0);
+            .NbGalinettes.Should()
+            .Be(0);
 
         savedPartieDeChasse.Chasseurs[2]
-                           .Nom.Should()
-                           .Be("Robert");
+            .Nom.Should()
+            .Be("Robert");
 
         savedPartieDeChasse.Chasseurs[2]
-                           .BallesRestantes.Should()
-                           .Be(12);
+            .BallesRestantes.Should()
+            .Be(12);
 
         savedPartieDeChasse.Chasseurs[2]
-                           .NbGalinettes.Should()
-                           .Be(0);
+            .NbGalinettes.Should()
+            .Be(0);
     }
 
     [Fact]
@@ -85,7 +85,7 @@ public class DemarrerUnePartieDeChasseTest : PartieDeChasseServiceTests
         Action demarrerPartieSansChasseurs = () => service.Demarrer(terrainDeChasse, chasseurs);
 
         demarrerPartieSansChasseurs.Should()
-                                   .Throw<ImpossibleDeDémarrerUnePartieSansGalinettes>();
+            .Throw<ImpossibleDeDémarrerUnePartieSansGalinettes>();
     }
 
     [Fact]
@@ -99,11 +99,11 @@ public class DemarrerUnePartieDeChasseTest : PartieDeChasseServiceTests
         Action demarrerPartieSansChasseurs = () => service.Demarrer(terrainDeChasse, chasseurs);
 
         demarrerPartieSansChasseurs.Should()
-                                   .Throw<ImpossibleDeDémarrerUnePartieSansChasseur>();
+            .Throw<ImpossibleDeDémarrerUnePartieSansChasseur>();
 
-        repository.SavedPartieDeChasse()
-                  .Should()
-                  .BeNull();
+        repository.HasSavedPartieDeChasse()
+            .Should()
+            .BeNull();
     }
 
     [Fact]
@@ -111,16 +111,16 @@ public class DemarrerUnePartieDeChasseTest : PartieDeChasseServiceTests
     {
         var repository = new PartieDeChasseRepositoryForTests();
         var service = new PartieDeChasseService(repository, TimeProvider);
-        var chasseurs = new List<(string, int)> { ("Dédé", 20), ("Bernard", 0), };
+        var chasseurs = new List<(string, int)> {("Dédé", 20), ("Bernard", 0),};
         var terrainDeChasse = ("Pitibon sur Sauldre", 3);
 
         Action demarrerPartieAvecChasseurSansBalle = () => service.Demarrer(terrainDeChasse, chasseurs);
 
         demarrerPartieAvecChasseurSansBalle.Should()
-                                           .Throw<ImpossibleDeDémarrerUnePartieAvecUnChasseurSansBalle>();
+            .Throw<ImpossibleDeDémarrerUnePartieAvecUnChasseurSansBalle>();
 
-        repository.SavedPartieDeChasse()
-                  .Should()
-                  .BeNull();
+        repository.HasSavedPartieDeChasse()
+            .Should()
+            .BeNull();
     }
 }

@@ -33,10 +33,9 @@ public class PartieDeChasseDataBuilder
         };
     }
 
-    public PartieDeChasseDataBuilder EtUnTerrainAvecDesGalinettes()
+    public PartieDeChasseDataBuilder EtUnTerrainAvecDesGalinettes(int nbGalinettes)
     {
-        _terrain = new Terrain {Nom = "Pitibon sur Sauldre", NbGalinettes = 3,};
-
+        _terrain.NbGalinettes = nbGalinettes;
         return this;
     }
 

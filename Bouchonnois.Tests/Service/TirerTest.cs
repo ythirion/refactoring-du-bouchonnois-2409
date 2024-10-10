@@ -1,10 +1,12 @@
 ﻿using Bouchonnois.Domain;
 using Bouchonnois.Service;
 using Bouchonnois.Service.Exceptions;
+using Bouchonnois.Tests.Builders;
 using Bouchonnois.Tests.Doubles;
 
 using static Bouchonnois.Tests.Builders.PartieDeChasseDataBuilder;
 using static Bouchonnois.Tests.Builders.ChasseurBuilder;
+using static Bouchonnois.Tests.Assertions.PartieDeChasseExtensions;
 
 namespace Bouchonnois.Tests.Service;
 
@@ -14,72 +16,25 @@ public class TirerTest : PartieDeChasseServiceTests
     public void AvecUnChasseurAyantDesBalles()
     {
         var repository = new PartieDeChasseRepositoryForTests();
-
-        PartieDeChasse unePartieDeChasseAvecDesChasseursAyantDesBalles = UnePartieDeChasse()
+        var nbGalinettes = 2;
+        var unePartieDeChasseAvecDesChasseursAyantDesBalles = UnePartieDeChasse()
             .AvecDesChasseursAyantDesBalles(Dédé(), Bernard(), Robert())
-            .EtUnTerrainAvecDesGalinettes()
+            .EtUnTerrainAvecDesGalinettes(nbGalinettes)
             .Build();
 
-        Guid id = unePartieDeChasseAvecDesChasseursAyantDesBalles.Id;
-
         repository.Add(unePartieDeChasseAvecDesChasseursAyantDesBalles);
-
         var service = new PartieDeChasseService(repository, TimeProvider);
 
-        service.Tirer(id, "Bernard");
+        service.Tirer(unePartieDeChasseAvecDesChasseursAyantDesBalles.Id, Chasseurs.Bernard);
 
-        PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
-
-        savedPartieDeChasse.Id.Should()
-            .Be(id);
-
-        savedPartieDeChasse.Status.Should()
-            .Be(PartieStatus.EnCours);
-
-        savedPartieDeChasse.Terrain.Nom.Should()
-            .Be("Pitibon sur Sauldre");
-
-        savedPartieDeChasse.Terrain.NbGalinettes.Should()
-            .Be(3);
-
-        savedPartieDeChasse.Chasseurs.Should()
-            .HaveCount(3);
-
-        savedPartieDeChasse.Chasseurs[0]
-            .Nom.Should()
-            .Be("Dédé");
-
-        savedPartieDeChasse.Chasseurs[0]
-            .BallesRestantes.Should()
-            .Be(20);
-
-        savedPartieDeChasse.Chasseurs[0]
-            .NbGalinettes.Should()
-            .Be(0);
-
-        savedPartieDeChasse.Chasseurs[1]
-            .Nom.Should()
-            .Be("Bernard");
-
-        savedPartieDeChasse.Chasseurs[1]
-            .BallesRestantes.Should()
-            .Be(7);
-
-        savedPartieDeChasse.Chasseurs[1]
-            .NbGalinettes.Should()
-            .Be(0);
-
-        savedPartieDeChasse.Chasseurs[2]
-            .Nom.Should()
-            .Be("Robert");
-
-        savedPartieDeChasse.Chasseurs[2]
-            .BallesRestantes.Should()
-            .Be(12);
-
-        savedPartieDeChasse.Chasseurs[2]
-            .NbGalinettes.Should()
-            .Be(0);
+        repository
+            .HasSavedPartieDeChasse()
+            .Should()
+            .HasEmittedEvent(Now, $"{Chasseurs.Bernard} tire")
+            .And
+            .ChasseurATiré(Chasseurs.Bernard, expectedBallesRestantes: 7)
+            .And
+            .TerrainAEncoreDesGalinettes(nbGalinettes);
     }
 
     [Fact]
@@ -108,7 +63,7 @@ public class TirerTest : PartieDeChasseServiceTests
         tirerSansBalle.Should()
             .Throw<TasPlusDeBallesMonVieuxChasseALaMain>();
 
-        AssertLastEvent(repository.SavedPartieDeChasse(),
+        AssertLastEvent(repository.HasSavedPartieDeChasse(),
             "Bernard tire -> T'as plus de balles mon vieux, chasse à la main");
     }
 
@@ -140,7 +95,7 @@ public class TirerTest : PartieDeChasseServiceTests
             .Throw<ChasseurInconnu>()
             .WithMessage($"Chasseur inconnu {nomChasseurInconnu}");
 
-        repository.SavedPartieDeChasse()
+        repository.HasSavedPartieDeChasse()
             .Should()
             .BeNull();
     }
@@ -156,7 +111,7 @@ public class TirerTest : PartieDeChasseServiceTests
         tirerQuandPartieExistePas.Should()
             .Throw<LaPartieDeChasseNexistePas>();
 
-        repository.SavedPartieDeChasse()
+        repository.HasSavedPartieDeChasse()
             .Should()
             .BeNull();
     }
@@ -187,7 +142,7 @@ public class TirerTest : PartieDeChasseServiceTests
         tirerQuandTerminée.Should()
             .Throw<OnTirePasQuandLaPartieEstTerminée>();
 
-        AssertLastEvent(repository.SavedPartieDeChasse(),
+        AssertLastEvent(repository.HasSavedPartieDeChasse(),
             "Chasseur inconnu veut tirer -> On tire pas quand la partie est terminée");
     }
 
@@ -217,7 +172,7 @@ public class TirerTest : PartieDeChasseServiceTests
         tirerEnPleinApéro.Should()
             .Throw<OnTirePasPendantLapéroCestSacré>();
 
-        AssertLastEvent(repository.SavedPartieDeChasse(),
+        AssertLastEvent(repository.HasSavedPartieDeChasse(),
             "Chasseur inconnu veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!");
     }
 }

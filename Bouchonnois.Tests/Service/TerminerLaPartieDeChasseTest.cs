@@ -14,27 +14,27 @@ public class TerminerLaPartieDeChasseTest : PartieDeChasseServiceTests
         var repository = new PartieDeChasseRepositoryForTests();
 
         repository.Add(new PartieDeChasse
-                       {
-                           Id = id,
-                           Chasseurs =
-                           [
-                               new Chasseur { Nom = "Dédé", BallesRestantes = 20, },
-                               new Chasseur { Nom = "Bernard", BallesRestantes = 8, },
-                               new Chasseur { Nom = "Robert", BallesRestantes = 12, },
-                           ],
-                           Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3, },
-                           Status = PartieStatus.Terminée,
-                       });
+        {
+            Id = id,
+            Chasseurs =
+            [
+                new Chasseur {Nom = "Dédé", BallesRestantes = 20,},
+                new Chasseur {Nom = "Bernard", BallesRestantes = 8,},
+                new Chasseur {Nom = "Robert", BallesRestantes = 12,},
+            ],
+            Terrain = new Terrain {Nom = "Pitibon sur Sauldre", NbGalinettes = 3,},
+            Status = PartieStatus.Terminée,
+        });
 
         var service = new PartieDeChasseService(repository, TimeProvider);
         Func<string>? prendreLapéroQuandTerminée = () => service.TerminerLaPartie(id);
 
         prendreLapéroQuandTerminée.Should()
-                                  .Throw<QuandCestFiniCestFini>();
+            .Throw<QuandCestFiniCestFini>();
 
-        repository.SavedPartieDeChasse()
-                  .Should()
-                  .BeNull();
+        repository.HasSavedPartieDeChasse()
+            .Should()
+            .BeNull();
     }
 
     [Fact]
@@ -44,51 +44,51 @@ public class TerminerLaPartieDeChasseTest : PartieDeChasseServiceTests
         var repository = new PartieDeChasseRepositoryForTests();
 
         repository.Add(new PartieDeChasse
-                       {
-                           Id = id,
-                           Chasseurs = [new Chasseur { Nom = "Robert", BallesRestantes = 12, NbGalinettes = 2, },],
-                           Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3, },
-                           Status = PartieStatus.EnCours,
-                           Events = [],
-                       });
+        {
+            Id = id,
+            Chasseurs = [new Chasseur {Nom = "Robert", BallesRestantes = 12, NbGalinettes = 2,},],
+            Terrain = new Terrain {Nom = "Pitibon sur Sauldre", NbGalinettes = 3,},
+            Status = PartieStatus.EnCours,
+            Events = [],
+        });
 
         var service = new PartieDeChasseService(repository, TimeProvider);
         var meilleurChasseur = service.TerminerLaPartie(id);
 
-        PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
+        PartieDeChasse? savedPartieDeChasse = repository.HasSavedPartieDeChasse();
 
         savedPartieDeChasse.Id.Should()
-                           .Be(id);
+            .Be(id);
 
         savedPartieDeChasse.Status.Should()
-                           .Be(PartieStatus.Terminée);
+            .Be(PartieStatus.Terminée);
 
         savedPartieDeChasse.Terrain.Nom.Should()
-                           .Be("Pitibon sur Sauldre");
+            .Be("Pitibon sur Sauldre");
 
         savedPartieDeChasse.Terrain.NbGalinettes.Should()
-                           .Be(3);
+            .Be(3);
 
         savedPartieDeChasse.Chasseurs.Should()
-                           .HaveCount(1);
+            .HaveCount(1);
 
         savedPartieDeChasse.Chasseurs[0]
-                           .Nom.Should()
-                           .Be("Robert");
+            .Nom.Should()
+            .Be("Robert");
 
         savedPartieDeChasse.Chasseurs[0]
-                           .BallesRestantes.Should()
-                           .Be(12);
+            .BallesRestantes.Should()
+            .Be(12);
 
         savedPartieDeChasse.Chasseurs[0]
-                           .NbGalinettes.Should()
-                           .Be(2);
+            .NbGalinettes.Should()
+            .Be(2);
 
         meilleurChasseur.Should()
-                        .Be("Robert");
+            .Be("Robert");
 
-        AssertLastEvent(repository.SavedPartieDeChasse(),
-                        "La partie de chasse est terminée, vainqueur : Robert - 2 galinettes");
+        AssertLastEvent(repository.HasSavedPartieDeChasse(),
+            "La partie de chasse est terminée, vainqueur : Robert - 2 galinettes");
     }
 
     [Fact]
@@ -98,77 +98,77 @@ public class TerminerLaPartieDeChasseTest : PartieDeChasseServiceTests
         var repository = new PartieDeChasseRepositoryForTests();
 
         repository.Add(new PartieDeChasse
-                       {
-                           Id = id,
-                           Chasseurs =
-                           [
-                               new Chasseur { Nom = "Dédé", BallesRestantes = 20, },
-                               new Chasseur { Nom = "Bernard", BallesRestantes = 8, },
-                               new Chasseur { Nom = "Robert", BallesRestantes = 12, NbGalinettes = 2, },
-                           ],
-                           Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3, },
-                           Status = PartieStatus.EnCours,
-                           Events = [],
-                       });
+        {
+            Id = id,
+            Chasseurs =
+            [
+                new Chasseur {Nom = "Dédé", BallesRestantes = 20,},
+                new Chasseur {Nom = "Bernard", BallesRestantes = 8,},
+                new Chasseur {Nom = "Robert", BallesRestantes = 12, NbGalinettes = 2,},
+            ],
+            Terrain = new Terrain {Nom = "Pitibon sur Sauldre", NbGalinettes = 3,},
+            Status = PartieStatus.EnCours,
+            Events = [],
+        });
 
         var service = new PartieDeChasseService(repository, TimeProvider);
         var meilleurChasseur = service.TerminerLaPartie(id);
 
-        PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
+        PartieDeChasse? savedPartieDeChasse = repository.HasSavedPartieDeChasse();
 
         savedPartieDeChasse.Id.Should()
-                           .Be(id);
+            .Be(id);
 
         savedPartieDeChasse.Status.Should()
-                           .Be(PartieStatus.Terminée);
+            .Be(PartieStatus.Terminée);
 
         savedPartieDeChasse.Terrain.Nom.Should()
-                           .Be("Pitibon sur Sauldre");
+            .Be("Pitibon sur Sauldre");
 
         savedPartieDeChasse.Terrain.NbGalinettes.Should()
-                           .Be(3);
+            .Be(3);
 
         savedPartieDeChasse.Chasseurs.Should()
-                           .HaveCount(3);
+            .HaveCount(3);
 
         savedPartieDeChasse.Chasseurs[0]
-                           .Nom.Should()
-                           .Be("Dédé");
+            .Nom.Should()
+            .Be("Dédé");
 
         savedPartieDeChasse.Chasseurs[0]
-                           .BallesRestantes.Should()
-                           .Be(20);
+            .BallesRestantes.Should()
+            .Be(20);
 
         savedPartieDeChasse.Chasseurs[0]
-                           .NbGalinettes.Should()
-                           .Be(0);
+            .NbGalinettes.Should()
+            .Be(0);
 
         savedPartieDeChasse.Chasseurs[1]
-                           .Nom.Should()
-                           .Be("Bernard");
+            .Nom.Should()
+            .Be("Bernard");
 
         savedPartieDeChasse.Chasseurs[1]
-                           .BallesRestantes.Should()
-                           .Be(8);
+            .BallesRestantes.Should()
+            .Be(8);
 
         savedPartieDeChasse.Chasseurs[1]
-                           .NbGalinettes.Should()
-                           .Be(0);
+            .NbGalinettes.Should()
+            .Be(0);
 
         savedPartieDeChasse.Chasseurs[2]
-                           .Nom.Should()
-                           .Be("Robert");
+            .Nom.Should()
+            .Be("Robert");
 
         savedPartieDeChasse.Chasseurs[2]
-                           .BallesRestantes.Should()
-                           .Be(12);
+            .BallesRestantes.Should()
+            .Be(12);
 
         savedPartieDeChasse.Chasseurs[2]
-                           .NbGalinettes.Should()
-                           .Be(2);
+            .NbGalinettes.Should()
+            .Be(2);
 
         meilleurChasseur.Should()
-                        .Be("Robert");
+            .Be("Robert");
     }
 
     [Fact]
@@ -178,80 +178,80 @@ public class TerminerLaPartieDeChasseTest : PartieDeChasseServiceTests
         var repository = new PartieDeChasseRepositoryForTests();
 
         repository.Add(new PartieDeChasse
-                       {
-                           Id = id,
-                           Chasseurs =
-                           [
-                               new Chasseur { Nom = "Dédé", BallesRestantes = 20, NbGalinettes = 2, },
-                               new Chasseur { Nom = "Bernard", BallesRestantes = 8, NbGalinettes = 2, },
-                               new Chasseur { Nom = "Robert", BallesRestantes = 12, },
-                           ],
-                           Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3, },
-                           Status = PartieStatus.EnCours,
-                           Events = [],
-                       });
+        {
+            Id = id,
+            Chasseurs =
+            [
+                new Chasseur {Nom = "Dédé", BallesRestantes = 20, NbGalinettes = 2,},
+                new Chasseur {Nom = "Bernard", BallesRestantes = 8, NbGalinettes = 2,},
+                new Chasseur {Nom = "Robert", BallesRestantes = 12,},
+            ],
+            Terrain = new Terrain {Nom = "Pitibon sur Sauldre", NbGalinettes = 3,},
+            Status = PartieStatus.EnCours,
+            Events = [],
+        });
 
         var service = new PartieDeChasseService(repository, TimeProvider);
         var meilleurChasseur = service.TerminerLaPartie(id);
 
-        PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
+        PartieDeChasse? savedPartieDeChasse = repository.HasSavedPartieDeChasse();
 
         savedPartieDeChasse.Id.Should()
-                           .Be(id);
+            .Be(id);
 
         savedPartieDeChasse.Status.Should()
-                           .Be(PartieStatus.Terminée);
+            .Be(PartieStatus.Terminée);
 
         savedPartieDeChasse.Terrain.Nom.Should()
-                           .Be("Pitibon sur Sauldre");
+            .Be("Pitibon sur Sauldre");
 
         savedPartieDeChasse.Terrain.NbGalinettes.Should()
-                           .Be(3);
+            .Be(3);
 
         savedPartieDeChasse.Chasseurs.Should()
-                           .HaveCount(3);
+            .HaveCount(3);
 
         savedPartieDeChasse.Chasseurs[0]
-                           .Nom.Should()
-                           .Be("Dédé");
+            .Nom.Should()
+            .Be("Dédé");
 
         savedPartieDeChasse.Chasseurs[0]
-                           .BallesRestantes.Should()
-                           .Be(20);
+            .BallesRestantes.Should()
+            .Be(20);
 
         savedPartieDeChasse.Chasseurs[0]
-                           .NbGalinettes.Should()
-                           .Be(2);
+            .NbGalinettes.Should()
+            .Be(2);
 
         savedPartieDeChasse.Chasseurs[1]
-                           .Nom.Should()
-                           .Be("Bernard");
+            .Nom.Should()
+            .Be("Bernard");
 
         savedPartieDeChasse.Chasseurs[1]
-                           .BallesRestantes.Should()
-                           .Be(8);
+            .BallesRestantes.Should()
+            .Be(8);
 
         savedPartieDeChasse.Chasseurs[1]
-                           .NbGalinettes.Should()
-                           .Be(2);
+            .NbGalinettes.Should()
+            .Be(2);
 
         savedPartieDeChasse.Chasseurs[2]
-                           .Nom.Should()
-                           .Be("Robert");
+            .Nom.Should()
+            .Be("Robert");
 
         savedPartieDeChasse.Chasseurs[2]
-                           .BallesRestantes.Should()
-                           .Be(12);
+            .BallesRestantes.Should()
+            .Be(12);
 
         savedPartieDeChasse.Chasseurs[2]
-                           .NbGalinettes.Should()
-                           .Be(0);
+            .NbGalinettes.Should()
+            .Be(0);
 
         meilleurChasseur.Should()
-                        .Be("Dédé, Bernard");
+            .Be("Dédé, Bernard");
 
-        AssertLastEvent(repository.SavedPartieDeChasse(),
-                        "La partie de chasse est terminée, vainqueur : Dédé - 2 galinettes, Bernard - 2 galinettes");
+        AssertLastEvent(repository.HasSavedPartieDeChasse(),
+            "La partie de chasse est terminée, vainqueur : Dédé - 2 galinettes, Bernard - 2 galinettes");
     }
 
     [Fact]
@@ -261,80 +261,80 @@ public class TerminerLaPartieDeChasseTest : PartieDeChasseServiceTests
         var repository = new PartieDeChasseRepositoryForTests();
 
         repository.Add(new PartieDeChasse
-                       {
-                           Id = id,
-                           Chasseurs =
-                           [
-                               new Chasseur { Nom = "Dédé", BallesRestantes = 20, },
-                               new Chasseur { Nom = "Bernard", BallesRestantes = 8, },
-                               new Chasseur { Nom = "Robert", BallesRestantes = 12, },
-                           ],
-                           Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3, },
-                           Status = PartieStatus.EnCours,
-                           Events = [],
-                       });
+        {
+            Id = id,
+            Chasseurs =
+            [
+                new Chasseur {Nom = "Dédé", BallesRestantes = 20,},
+                new Chasseur {Nom = "Bernard", BallesRestantes = 8,},
+                new Chasseur {Nom = "Robert", BallesRestantes = 12,},
+            ],
+            Terrain = new Terrain {Nom = "Pitibon sur Sauldre", NbGalinettes = 3,},
+            Status = PartieStatus.EnCours,
+            Events = [],
+        });
 
         var service = new PartieDeChasseService(repository, TimeProvider);
         var meilleurChasseur = service.TerminerLaPartie(id);
 
-        PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
+        PartieDeChasse? savedPartieDeChasse = repository.HasSavedPartieDeChasse();
 
         savedPartieDeChasse.Id.Should()
-                           .Be(id);
+            .Be(id);
 
         savedPartieDeChasse.Status.Should()
-                           .Be(PartieStatus.Terminée);
+            .Be(PartieStatus.Terminée);
 
         savedPartieDeChasse.Terrain.Nom.Should()
-                           .Be("Pitibon sur Sauldre");
+            .Be("Pitibon sur Sauldre");
 
         savedPartieDeChasse.Terrain.NbGalinettes.Should()
-                           .Be(3);
+            .Be(3);
 
         savedPartieDeChasse.Chasseurs.Should()
-                           .HaveCount(3);
+            .HaveCount(3);
 
         savedPartieDeChasse.Chasseurs[0]
-                           .Nom.Should()
-                           .Be("Dédé");
+            .Nom.Should()
+            .Be("Dédé");
 
         savedPartieDeChasse.Chasseurs[0]
-                           .BallesRestantes.Should()
-                           .Be(20);
+            .BallesRestantes.Should()
+            .Be(20);
 
         savedPartieDeChasse.Chasseurs[0]
-                           .NbGalinettes.Should()
-                           .Be(0);
+            .NbGalinettes.Should()
+            .Be(0);
 
         savedPartieDeChasse.Chasseurs[1]
-                           .Nom.Should()
-                           .Be("Bernard");
+            .Nom.Should()
+            .Be("Bernard");
 
         savedPartieDeChasse.Chasseurs[1]
-                           .BallesRestantes.Should()
-                           .Be(8);
+            .BallesRestantes.Should()
+            .Be(8);
 
         savedPartieDeChasse.Chasseurs[1]
-                           .NbGalinettes.Should()
-                           .Be(0);
+            .NbGalinettes.Should()
+            .Be(0);
 
         savedPartieDeChasse.Chasseurs[2]
-                           .Nom.Should()
-                           .Be("Robert");
+            .Nom.Should()
+            .Be("Robert");
 
         savedPartieDeChasse.Chasseurs[2]
-                           .BallesRestantes.Should()
-                           .Be(12);
+            .BallesRestantes.Should()
+            .Be(12);
 
         savedPartieDeChasse.Chasseurs[2]
-                           .NbGalinettes.Should()
-                           .Be(0);
+            .NbGalinettes.Should()
+            .Be(0);
 
         meilleurChasseur.Should()
-                        .Be("Brocouille");
+            .Be("Brocouille");
 
-        AssertLastEvent(repository.SavedPartieDeChasse(),
-                        "La partie de chasse est terminée, vainqueur : Brocouille");
+        AssertLastEvent(repository.HasSavedPartieDeChasse(),
+            "La partie de chasse est terminée, vainqueur : Brocouille");
     }
 
     [Fact]
@@ -344,76 +344,76 @@ public class TerminerLaPartieDeChasseTest : PartieDeChasseServiceTests
         var repository = new PartieDeChasseRepositoryForTests();
 
         repository.Add(new PartieDeChasse
-                       {
-                           Id = id,
-                           Chasseurs =
-                           [
-                               new Chasseur { Nom = "Dédé", BallesRestantes = 20, NbGalinettes = 3, },
-                               new Chasseur { Nom = "Bernard", BallesRestantes = 8, NbGalinettes = 3, },
-                               new Chasseur { Nom = "Robert", BallesRestantes = 12, NbGalinettes = 3, },
-                           ],
-                           Terrain = new Terrain { Nom = "Pitibon sur Sauldre", NbGalinettes = 3, },
-                           Status = PartieStatus.Apéro,
-                           Events = [],
-                       });
+        {
+            Id = id,
+            Chasseurs =
+            [
+                new Chasseur {Nom = "Dédé", BallesRestantes = 20, NbGalinettes = 3,},
+                new Chasseur {Nom = "Bernard", BallesRestantes = 8, NbGalinettes = 3,},
+                new Chasseur {Nom = "Robert", BallesRestantes = 12, NbGalinettes = 3,},
+            ],
+            Terrain = new Terrain {Nom = "Pitibon sur Sauldre", NbGalinettes = 3,},
+            Status = PartieStatus.Apéro,
+            Events = [],
+        });
 
         var service = new PartieDeChasseService(repository, TimeProvider);
         var meilleurChasseur = service.TerminerLaPartie(id);
 
-        PartieDeChasse? savedPartieDeChasse = repository.SavedPartieDeChasse();
+        PartieDeChasse? savedPartieDeChasse = repository.HasSavedPartieDeChasse();
 
         savedPartieDeChasse.Id.Should()
-                           .Be(id);
+            .Be(id);
 
         savedPartieDeChasse.Status.Should()
-                           .Be(PartieStatus.Terminée);
+            .Be(PartieStatus.Terminée);
 
         savedPartieDeChasse.Terrain.Nom.Should()
-                           .Be("Pitibon sur Sauldre");
+            .Be("Pitibon sur Sauldre");
 
         savedPartieDeChasse.Terrain.NbGalinettes.Should()
-                           .Be(3);
+            .Be(3);
 
         savedPartieDeChasse.Chasseurs.Should()
-                           .HaveCount(3);
+            .HaveCount(3);
 
         savedPartieDeChasse.Chasseurs[0]
-                           .Nom.Should()
-                           .Be("Dédé");
+            .Nom.Should()
+            .Be("Dédé");
 
         savedPartieDeChasse.Chasseurs[0]
-                           .BallesRestantes.Should()
-                           .Be(20);
+            .BallesRestantes.Should()
+            .Be(20);
 
         savedPartieDeChasse.Chasseurs[0]
-                           .NbGalinettes.Should()
-                           .Be(3);
+            .NbGalinettes.Should()
+            .Be(3);
 
         savedPartieDeChasse.Chasseurs[1]
-                           .Nom.Should()
-                           .Be("Bernard");
+            .Nom.Should()
+            .Be("Bernard");
 
         savedPartieDeChasse.Chasseurs[1]
-                           .BallesRestantes.Should()
-                           .Be(8);
+            .BallesRestantes.Should()
+            .Be(8);
 
         savedPartieDeChasse.Chasseurs[1]
-                           .NbGalinettes.Should()
-                           .Be(3);
+            .NbGalinettes.Should()
+            .Be(3);
 
         savedPartieDeChasse.Chasseurs[2]
-                           .Nom.Should()
-                           .Be("Robert");
+            .Nom.Should()
+            .Be("Robert");
 
         savedPartieDeChasse.Chasseurs[2]
-                           .BallesRestantes.Should()
-                           .Be(12);
+            .BallesRestantes.Should()
+            .Be(12);
 
         savedPartieDeChasse.Chasseurs[2]
-                           .NbGalinettes.Should()
-                           .Be(3);
+            .NbGalinettes.Should()
+            .Be(3);
 
         meilleurChasseur.Should()
-                        .Be("Dédé, Bernard, Robert");
+            .Be("Dédé, Bernard, Robert");
     }
 }
