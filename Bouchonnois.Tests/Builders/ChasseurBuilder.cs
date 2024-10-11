@@ -5,7 +5,7 @@ namespace Bouchonnois.Tests.Builders;
 public class ChasseurBuilder
 {
     private int _ballesRestantes;
-    private readonly string? _nom;
+    private readonly string _nom;
     private int _nbGalinettes;
 
     public ChasseurBuilder(string nom) => _nom = nom;
@@ -42,6 +42,12 @@ public class ChasseurBuilder
     public ChasseurBuilder AvecDesBalles(int ballesRestantes)
     {
         _ballesRestantes = ballesRestantes;
+        return this;
+    }
+
+    public ChasseurBuilder AyantTué(int nbGalinettes)
+    {
+        _ballesRestantes = nbGalinettes;
         return this;
     }
 

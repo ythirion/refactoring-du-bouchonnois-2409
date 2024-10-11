@@ -6,7 +6,7 @@ namespace Bouchonnois.Tests.Assertions;
 
 public static class PartieDeChasseExtensions
 {
-    public static PartieDeChasseAssertions Should(this PartieDeChasse? partieDeChasse) => new(partieDeChasse);
+    public static PartieDeChasseAssertions Should(this PartieDeChasse partieDeChasse) => new(partieDeChasse);
 }
 
 public class PartieDeChasseAssertions : ReferenceTypeAssertions<PartieDeChasse, PartieDeChasseAssertions>
