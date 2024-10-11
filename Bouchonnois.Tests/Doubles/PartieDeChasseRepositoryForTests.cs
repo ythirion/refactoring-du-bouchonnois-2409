@@ -5,7 +5,7 @@ namespace Bouchonnois.Tests.Doubles;
 
 public class PartieDeChasseRepositoryForTests : IPartieDeChasseRepository
 {
-    private readonly IDictionary<Guid, PartieDeChasse> _partiesDeChasse = new Dictionary<Guid, PartieDeChasse>();
+    private readonly Dictionary<Guid, PartieDeChasse> _partiesDeChasse = new Dictionary<Guid, PartieDeChasse>();
     private PartieDeChasse? _savedPartieDeChasse;
 
     public void Save(PartieDeChasse partieDeChasse)
@@ -16,9 +16,7 @@ public class PartieDeChasseRepositoryForTests : IPartieDeChasseRepository
 
     public PartieDeChasse GetById(Guid partieDeChasseId)
     {
-        return (_partiesDeChasse.ContainsKey(partieDeChasseId)
-            ? _partiesDeChasse[partieDeChasseId]
-            : null)!;
+        return (_partiesDeChasse.GetValueOrDefault(partieDeChasseId)) ?? throw new InvalidOperationException();
     }
 
     public void Add(PartieDeChasse partieDeChasse)
