@@ -47,7 +47,7 @@ public class ChasseurBuilder
 
     public ChasseurBuilder AyantTué(int nbGalinettes)
     {
-        _ballesRestantes = nbGalinettes;
+        _nbGalinettes = nbGalinettes;
         return this;
     }
 
