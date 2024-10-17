@@ -7,7 +7,6 @@ public class PartieDeChasseService
 {
     private readonly IPartieDeChasseRepository _repository;
     private readonly Func<DateTime> _timeProvider;
-    private readonly TirerUseCase _tirerUseCase;
 
     public PartieDeChasseService(
         IPartieDeChasseRepository repository,
@@ -15,12 +14,6 @@ public class PartieDeChasseService
     {
         _timeProvider = timeProvider;
         _repository = repository;
-        _tirerUseCase = new TirerUseCase(repository, timeProvider);
-    }
-
-    public void Tirer(Guid id, string chasseur)
-    {
-        _tirerUseCase.Tirer(id, chasseur);
     }
 
     public string ConsulterStatus(Guid id)
