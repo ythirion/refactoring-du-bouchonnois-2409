@@ -1,5 +1,5 @@
 using Bouchonnois.Domain;
-using Bouchonnois.Service.Exceptions;
+using Bouchonnois.Domain.Exceptions;
 
 namespace Bouchonnois.Service;
 
@@ -12,15 +12,7 @@ public class TirerUseCase(IPartieDeChasseRepository repository, Func<DateTime> t
     {
         PartieDeChasse partieDeChasse = _repository.GetById(id) ?? throw new LaPartieDeChasseNexistePas();
 
-        if ( partieDeChasse.Status == PartieStatus.Apéro )
-        {
-            partieDeChasse.Events.Add(new Event(_timeProvider(),
-                $"{chasseur} veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!"));
-
-            _repository.Save(partieDeChasse);
-
-            throw new OnTirePasPendantLapéroCestSacré();
-        }
+        partieDeChasse.Tirer(chasseur, _timeProvider,()=>_repository.Save(partieDeChasse));
 
         if ( partieDeChasse.Status == PartieStatus.Terminée )
         {

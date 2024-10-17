@@ -1,5 +1,5 @@
-﻿using Bouchonnois.Service;
-using Bouchonnois.Service.Exceptions;
+﻿using Bouchonnois.Domain.Exceptions;
+using Bouchonnois.Service;
 using Bouchonnois.Tests.Builders;
 using Bouchonnois.Tests.Doubles;
 
