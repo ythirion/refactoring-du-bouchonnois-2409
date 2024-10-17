@@ -18,7 +18,7 @@ public class PartieDeChasseAssertions : ReferenceTypeAssertions<PartieDeChasse, 
     {
     }
 
-    public AndConstraint<PartieDeChasseAssertions> HasEmittedEvent(DateTime expectedDate, string expectedMessage)
+    public AndConstraint<PartieDeChasseAssertions> HaveEmittedEvent(DateTime expectedDate, string expectedMessage)
     {
         Subject
             .Events

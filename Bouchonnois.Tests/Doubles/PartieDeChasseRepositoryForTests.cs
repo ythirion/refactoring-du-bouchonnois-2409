@@ -16,7 +16,9 @@ public class PartieDeChasseRepositoryForTests : IPartieDeChasseRepository
 
     public PartieDeChasse GetById(Guid partieDeChasseId)
     {
-        return (_partiesDeChasse.GetValueOrDefault(partieDeChasseId)) ?? throw new InvalidOperationException();
+        return (_partiesDeChasse.TryGetValue(partieDeChasseId, out PartieDeChasse? value)
+            ? value
+            : null)!;
     }
 
     public void Add(PartieDeChasse partieDeChasse)

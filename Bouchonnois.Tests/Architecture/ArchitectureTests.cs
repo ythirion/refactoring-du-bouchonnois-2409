@@ -3,6 +3,7 @@ using ArchUnitNET.Fluent.Syntax.Elements.Types;
 
 namespace Bouchonnois.Tests.Architecture;
 
+[Trait("Architecture", "Clean Architecture")]
 public class ArchitectureTests
 {
     private static GivenTypesConjunction TypesIn(string @namespace) =>

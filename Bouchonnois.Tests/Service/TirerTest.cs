@@ -40,7 +40,7 @@ public class TirerTest : PartieDeChasseServiceTests
         _repository
             .SavedPartieDeChasse()
             .Should()
-            .HasEmittedEvent(Now, $"{Chasseurs.Bernard} tire")
+            .HaveEmittedEvent(Now, $"{Chasseurs.Bernard} tire")
             .And
             .ChasseurATiré(Chasseurs.Bernard, expectedBallesRestantes: 7)
             .And
@@ -88,7 +88,9 @@ public class TirerTest : PartieDeChasseServiceTests
             .Throw<ChasseurInconnu>()
             .WithMessage($"Chasseur inconnu {nomChasseurInconnu}");
 
-        _repository.HasNotSavedPartieDeChasse();
+        _repository.HasNotSavedPartieDeChasse()
+            .Should()
+            .BeTrue();
     }
 
     [Fact]
@@ -101,7 +103,10 @@ public class TirerTest : PartieDeChasseServiceTests
 
         tirerQuandPartieExistePas.Should()
             .Throw<LaPartieDeChasseNexistePas>();
-        _repository.HasNotSavedPartieDeChasse();
+
+        _repository.HasNotSavedPartieDeChasse()
+            .Should()
+            .BeTrue();
     }
 
     [Fact]

@@ -2,6 +2,7 @@
 
 namespace Bouchonnois.Tests.Architecture
 {
+    [Trait("Architecture", "Naming Convention")]
     public class NamingConvention
     {
         [Fact]

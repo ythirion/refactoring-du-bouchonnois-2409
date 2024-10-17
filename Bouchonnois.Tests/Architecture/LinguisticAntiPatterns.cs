@@ -4,6 +4,7 @@ using static ArchUnitNET.Fluent.ArchRuleDefinition;
 
 namespace Bouchonnois.Tests.Architecture
 {
+    [Trait("Architecture", "Linguistic Anti-Patterns")]
     public class LinguisticAntiPatterns
     {
         private static GivenMethodMembersThat Methods()
