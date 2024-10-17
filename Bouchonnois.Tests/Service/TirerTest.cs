@@ -98,8 +98,7 @@ public class TirerTest : PartieDeChasseServiceTests
     {
         var id = Guid.NewGuid();
         var repository = new PartieDeChasseRepositoryForTests();
-        var service = new PartieDeChasseService(repository, TimeProvider);
-        Action? tirerQuandPartieExistePas = () => service.Tirer(id, "Bernard");
+        Action? tirerQuandPartieExistePas = () => _tirerUseCase.Tirer(id, "Bernard");
 
         tirerQuandPartieExistePas.Should()
             .Throw<LaPartieDeChasseNexistePas>();
