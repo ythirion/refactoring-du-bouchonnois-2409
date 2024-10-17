@@ -17,7 +17,25 @@ public class ArchitectureTests
     /// </summary>
     [Fact(DisplayName = "Lower layers can not depend on outer layers")]
     public void CheckInwardDependencies()
-    {
-        // TODO implement this test
-    }
+        => Domain()
+            .Should()
+            .OnlyDependOn(Domain())
+            .And(
+                ApplicationServices()
+                    .Should()
+                    .NotDependOnAny(Infrastructure())
+            )
+            .Check();
+
+    private static GivenTypesConjunctionWithDescription ApplicationServices() =>
+        TypesIn("Service")
+            .As("Application Business Rules");
+
+    private static GivenTypesConjunctionWithDescription Infrastructure() =>
+        TypesIn("Repository")
+            .As("Framework & Drivers");
+
+    private static GivenTypesConjunctionWithDescription Domain() =>
+        TypesIn("Domain")
+            .As("Enterprise Business Rules");
 }

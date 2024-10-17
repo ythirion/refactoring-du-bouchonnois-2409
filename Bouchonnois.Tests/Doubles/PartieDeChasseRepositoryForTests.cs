@@ -1,5 +1,5 @@
 using Bouchonnois.Domain;
-using Bouchonnois.Repository;
+using Bouchonnois.Service;
 
 namespace Bouchonnois.Tests.Doubles;
 

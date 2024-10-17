@@ -1,6 +1,6 @@
 using Bouchonnois.Domain;
 
-namespace Bouchonnois.Repository;
+namespace Bouchonnois.Service;
 
 public interface IPartieDeChasseRepository
 {

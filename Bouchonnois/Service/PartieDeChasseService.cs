@@ -1,5 +1,4 @@
 using Bouchonnois.Domain;
-using Bouchonnois.Repository;
 using Bouchonnois.Service.Exceptions;
 
 namespace Bouchonnois.Service;
@@ -29,8 +28,8 @@ public class PartieDeChasseService
         return string.Join(
             Environment.NewLine,
             partieDeChasse.Events
-                          .OrderByDescending(@event => @event.Date)
-                          .Select(@event => @event.ToString())
+                .OrderByDescending(@event => @event.Date)
+                .Select(@event => @event.ToString())
         );
     }
 
@@ -42,13 +41,13 @@ public class PartieDeChasseService
         }
 
         var partieDeChasse = new PartieDeChasse
-                             {
-                                 Id = Guid.NewGuid(),
-                                 Status = PartieStatus.EnCours,
-                                 Chasseurs = [],
-                                 Terrain = new Terrain { Nom = terrainDeChasse.nom, NbGalinettes = terrainDeChasse.nbGalinettes, },
-                                 Events = [],
-                             };
+        {
+            Id = Guid.NewGuid(),
+            Status = PartieStatus.EnCours,
+            Chasseurs = [],
+            Terrain = new Terrain {Nom = terrainDeChasse.nom, NbGalinettes = terrainDeChasse.nbGalinettes,},
+            Events = [],
+        };
 
         foreach ( (string nom, int nbBalles) chasseur in chasseurs )
         {
@@ -57,7 +56,7 @@ public class PartieDeChasseService
                 throw new ImpossibleDeDémarrerUnePartieAvecUnChasseurSansBalle();
             }
 
-            partieDeChasse.Chasseurs.Add(new Chasseur { Nom = chasseur.nom, BallesRestantes = chasseur.nbBalles, });
+            partieDeChasse.Chasseurs.Add(new Chasseur {Nom = chasseur.nom, BallesRestantes = chasseur.nbBalles,});
         }
 
         if ( partieDeChasse.Chasseurs.Count == 0 )
@@ -71,7 +70,7 @@ public class PartieDeChasseService
         );
 
         partieDeChasse.Events.Add(new Event(_timeProvider(),
-                                            $"La partie de chasse commence à {partieDeChasse.Terrain.Nom} avec {chasseursToString}")
+            $"La partie de chasse commence à {partieDeChasse.Terrain.Nom} avec {chasseursToString}")
         );
 
         _repository.Save(partieDeChasse);
@@ -132,9 +131,9 @@ public class PartieDeChasseService
         PartieDeChasse partieDeChasse = _repository.GetById(id);
 
         IOrderedEnumerable<IGrouping<int, Chasseur>> classement = partieDeChasse
-                                                                  .Chasseurs
-                                                                  .GroupBy(c => c.NbGalinettes)
-                                                                  .OrderByDescending(g => g.Key);
+            .Chasseurs
+            .GroupBy(c => c.NbGalinettes)
+            .OrderByDescending(g => g.Key);
 
         if ( partieDeChasse.Status == PartieStatus.Terminée )
         {
@@ -160,8 +159,8 @@ public class PartieDeChasseService
 
             partieDeChasse.Events.Add(
                 new Event(_timeProvider(),
-                          $"La partie de chasse est terminée, vainqueur : {
-                              string.Join(", ", firstChasseur.Select(c => $"{c.Nom} - {c.NbGalinettes} galinettes"))}"
+                    $"La partie de chasse est terminée, vainqueur : {
+                        string.Join(", ", firstChasseur.Select(c => $"{c.Nom} - {c.NbGalinettes} galinettes"))}"
                 )
             );
         }
@@ -191,7 +190,7 @@ public class PartieDeChasseService
                     if ( chasseurQuiTire.BallesRestantes == 0 )
                     {
                         partieDeChasse.Events.Add(new Event(_timeProvider(),
-                                                            $"{chasseur} tire -> T'as plus de balles mon vieux, chasse à la main"));
+                            $"{chasseur} tire -> T'as plus de balles mon vieux, chasse à la main"));
 
                         _repository.Save(partieDeChasse);
 
@@ -209,7 +208,7 @@ public class PartieDeChasseService
             else
             {
                 partieDeChasse.Events.Add(new Event(_timeProvider(),
-                                                    $"{chasseur} veut tirer -> On tire pas quand la partie est terminée"));
+                    $"{chasseur} veut tirer -> On tire pas quand la partie est terminée"));
 
                 _repository.Save(partieDeChasse);
 
@@ -219,7 +218,7 @@ public class PartieDeChasseService
         else
         {
             partieDeChasse.Events.Add(new Event(_timeProvider(),
-                                                $"{chasseur} veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!"));
+                $"{chasseur} veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!"));
 
             _repository.Save(partieDeChasse);
 
@@ -251,7 +250,7 @@ public class PartieDeChasseService
                         if ( chasseurQuiTire.BallesRestantes == 0 )
                         {
                             partieDeChasse.Events.Add(new Event(_timeProvider(),
-                                                                $"{chasseur} veut tirer sur une galinette -> T'as plus de balles mon vieux, chasse à la main"));
+                                $"{chasseur} veut tirer sur une galinette -> T'as plus de balles mon vieux, chasse à la main"));
 
                             _repository.Save(partieDeChasse);
 
@@ -271,7 +270,7 @@ public class PartieDeChasseService
                 else
                 {
                     partieDeChasse.Events.Add(new Event(_timeProvider(),
-                                                        $"{chasseur} veut tirer -> On tire pas quand la partie est terminée"));
+                        $"{chasseur} veut tirer -> On tire pas quand la partie est terminée"));
 
                     _repository.Save(partieDeChasse);
 
@@ -281,7 +280,7 @@ public class PartieDeChasseService
             else
             {
                 partieDeChasse.Events.Add(new Event(_timeProvider(),
-                                                    $"{chasseur} veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!"));
+                    $"{chasseur} veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!"));
 
                 _repository.Save(partieDeChasse);
 
