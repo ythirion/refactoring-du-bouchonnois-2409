@@ -165,6 +165,33 @@ public class TirerTest : PartieDeChasseServiceTests
         result.LeftUnsafe().Message.Should().Be($"La partie de chasse {partieDeChasseId} n'existe pas");
         _repository.SavedPartieDeChasse().Should().BeNull();
     }
+    
+    [Fact]
+    public void TirerUseCase_ShouldSucceed()
+    {
+        int nbGalinettes = 22;
+        var unePartieDeChasseAvecDesChasseursAyantDesBalles = UnePartieDeChasse()
+            .AvecDesChasseurs(Dédé(), Bernard(), Robert())
+            .EtUnTerrainAvecDesGalinettes(nbGalinettes)
+            .Build();
+        _repository.Add(unePartieDeChasseAvecDesChasseursAyantDesBalles);
+        
+        // Act
+        var result = _tirerUseCase.HandleSansException(
+            new TirerCommand(unePartieDeChasseAvecDesChasseursAyantDesBalles.Id, "Bernard"));
+
+        // Assert
+        result.Should().BeRight();
+        
+        _repository
+            .SavedPartieDeChasse()
+            .Should()
+            .HaveEmittedEvent(Now, $"{Chasseurs.Bernard} tire")
+            .And
+            .ChasseurATiré(Chasseurs.Bernard, expectedBallesRestantes: 7)
+            .And
+            .TerrainAEncoreDesGalinettes(nbGalinettes);
+    }
 
     #region Properties
 

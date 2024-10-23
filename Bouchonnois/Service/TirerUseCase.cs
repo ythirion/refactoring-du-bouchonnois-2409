@@ -26,6 +26,15 @@ public class TirerUseCase(IPartieDeChasseRepository repository, Func<DateTime> t
 
     public Either<Error, Unit> HandleSansException(TirerCommand tirerCommand)
     {
-        return Error.New($"La partie de chasse {tirerCommand.Id} n'existe pas");
+        try
+        {
+            Handle(tirerCommand);
+            return Unit.Default;
+        }
+        catch ( Exception e )
+        {
+            Console.WriteLine(e);
+            return Error.New($"La partie de chasse {tirerCommand.Id} n'existe pas");
+        }
     }
 }
