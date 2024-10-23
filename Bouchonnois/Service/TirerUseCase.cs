@@ -12,23 +12,13 @@ public class TirerUseCase(IPartieDeChasseRepository repository, Func<DateTime> t
     {
         PartieDeChasse partieDeChasse = _repository.GetById(id) ?? throw new LaPartieDeChasseNexistePas();
 
-        partieDeChasse.Tirer(chasseur, _timeProvider,()=>_repository.Save(partieDeChasse));
-
-        if ( partieDeChasse.Status == PartieStatus.Terminée )
-        {
-            partieDeChasse.Events.Add(new Event(_timeProvider(),
-                $"{chasseur} veut tirer -> On tire pas quand la partie est terminée"));
-
-            _repository.Save(partieDeChasse);
-
-            throw new OnTirePasQuandLaPartieEstTerminée();
-        }
-
         if ( !partieDeChasse.Chasseurs.Exists(c => c.Nom == chasseur) )
         {
             throw new ChasseurInconnu(chasseur);
         }
-        
+
+        partieDeChasse.Tirer(chasseur, _timeProvider, () => _repository.Save(partieDeChasse));
+
         Chasseur chasseurQuiTire = partieDeChasse.Chasseurs.Find(c => c.Nom == chasseur)!;
 
         if ( chasseurQuiTire.BallesRestantes == 0 )

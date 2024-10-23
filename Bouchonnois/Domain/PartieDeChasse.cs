@@ -21,10 +21,30 @@ public class PartieDeChasse
 
             throw new OnTirePasPendantLapéroCestSacré();
         }
+
+        if ( IsPartieDeChasseTerminée() )
+        {
+            Events.Add(new Event(timeProvider(),
+                $"{chasseur} veut tirer -> On tire pas quand la partie est terminée"));
+
+            save();
+
+            throw new OnTirePasQuandLaPartieEstTerminée();
+        }
+
+        if ( !Chasseurs.Exists(c => c.Nom == chasseur) )
+        {
+            throw new ChasseurInconnu(chasseur);
+        }
     }
 
     private bool IsDuringApéro()
     {
         return Status == PartieStatus.Apéro;
+    }
+
+    private bool IsPartieDeChasseTerminée()
+    {
+        return Status == PartieStatus.Terminée;
     }
 }
