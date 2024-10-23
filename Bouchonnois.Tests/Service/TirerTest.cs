@@ -35,7 +35,7 @@ public class TirerTest : PartieDeChasseServiceTests
             .Build();
         _repository.Add(unePartieDeChasseAvecDesChasseursAyantDesBalles);
 
-        _tirerUseCase.Tirer(unePartieDeChasseAvecDesChasseursAyantDesBalles.Id, Chasseurs.Bernard);
+        _tirerUseCase.Handle(new TirerCommand(unePartieDeChasseAvecDesChasseursAyantDesBalles.Id, Chasseurs.Bernard));
 
         _repository
             .SavedPartieDeChasse()
@@ -59,7 +59,7 @@ public class TirerTest : PartieDeChasseServiceTests
             .Build();
         _repository.Add(partieDeChasse);
 
-        Action tirerSansBalle = () => _tirerUseCase.Tirer(partieDeChasse.Id, Chasseurs.Bernard);
+        Action tirerSansBalle = () => _tirerUseCase.Handle(new TirerCommand(partieDeChasse.Id, Chasseurs.Bernard));
 
         tirerSansBalle.Should()
             .Throw<TasPlusDeBallesMonVieuxChasseALaMain>();
@@ -82,7 +82,7 @@ public class TirerTest : PartieDeChasseServiceTests
         _repository.Add(partieDeChasse);
 
         var nomChasseurInconnu = "Chasseur inconnu";
-        Action chasseurInconnuVeutTirer = () => _tirerUseCase.Tirer(partieDeChasse.Id, nomChasseurInconnu);
+        Action chasseurInconnuVeutTirer = () => _tirerUseCase.Handle(new TirerCommand(partieDeChasse.Id, nomChasseurInconnu));
 
         chasseurInconnuVeutTirer.Should()
             .Throw<ChasseurInconnu>()
@@ -98,7 +98,7 @@ public class TirerTest : PartieDeChasseServiceTests
     {
         var id = Guid.NewGuid();
         var repository = new PartieDeChasseRepositoryForTests();
-        Action? tirerQuandPartieExistePas = () => _tirerUseCase.Tirer(id, "Bernard");
+        Action? tirerQuandPartieExistePas = () => _tirerUseCase.Handle(new TirerCommand(id, "Bernard"));
 
         tirerQuandPartieExistePas.Should()
             .Throw<LaPartieDeChasseNexistePas>();
@@ -121,7 +121,7 @@ public class TirerTest : PartieDeChasseServiceTests
             .Build();
         _repository.Add(partieDeChasse);
 
-        Action tirerQuandTerminée = () => _tirerUseCase.Tirer(partieDeChasse.Id, Chasseurs.Bernard);
+        Action tirerQuandTerminée = () => _tirerUseCase.Handle(new TirerCommand(partieDeChasse.Id, Chasseurs.Bernard));
 
         tirerQuandTerminée.Should()
             .Throw<OnTirePasQuandLaPartieEstTerminée>();
@@ -143,7 +143,7 @@ public class TirerTest : PartieDeChasseServiceTests
             .Build();
         _repository.Add(partieDeChasse);
 
-        Action? tirerEnPleinApéro = () => _tirerUseCase.Tirer(partieDeChasse.Id, Chasseurs.Bernard);
+        Action? tirerEnPleinApéro = () => _tirerUseCase.Handle(new TirerCommand(partieDeChasse.Id, Chasseurs.Bernard));
 
         tirerEnPleinApéro.Should()
             .Throw<OnTirePasPendantLapéroCestSacré>();
@@ -165,7 +165,7 @@ public class TirerTest : PartieDeChasseServiceTests
                         .Build();
 
                     _repository.Add(partieDeChasse);
-                    service.Tirer(partieDeChasse.Id, chasseurs.Head.nom);
+                    service.Handle(new TirerCommand(partieDeChasse.Id, chasseurs.Head.nom));
                 }
             ));
 

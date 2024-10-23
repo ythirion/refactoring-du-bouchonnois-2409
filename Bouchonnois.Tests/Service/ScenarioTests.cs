@@ -22,7 +22,7 @@ public class ScenarioTests
         );
 
         time = time.Add(TimeSpan.FromMinutes(10));
-        tirerUseCase.Tirer(id, "Dédé");
+        tirerUseCase.Handle(new TirerCommand(id, "Dédé"));
 
         time = time.Add(TimeSpan.FromMinutes(30));
         service.TirerSurUneGalinette(id, "Robert");
@@ -34,10 +34,10 @@ public class ScenarioTests
         service.ReprendreLaPartie(id);
 
         time = time.Add(TimeSpan.FromMinutes(2));
-        tirerUseCase.Tirer(id, "Bernard");
+        tirerUseCase.Handle(new TirerCommand(id, "Bernard"));
 
         time = time.Add(TimeSpan.FromMinutes(1));
-        tirerUseCase.Tirer(id, "Bernard");
+        tirerUseCase.Handle(new TirerCommand(id, "Bernard"));
 
         time = time.Add(TimeSpan.FromMinutes(1));
         service.TirerSurUneGalinette(id, "Dédé");
@@ -52,28 +52,28 @@ public class ScenarioTests
         service.ReprendreLaPartie(id);
 
         time = time.Add(TimeSpan.FromMinutes(11));
-        tirerUseCase.Tirer(id, "Bernard");
+        tirerUseCase.Handle(new TirerCommand(id, "Bernard"));
 
         time = time.Add(TimeSpan.FromSeconds(1));
-        tirerUseCase.Tirer(id, "Bernard");
+        tirerUseCase.Handle(new TirerCommand(id, "Bernard"));
 
         time = time.Add(TimeSpan.FromSeconds(1));
-        tirerUseCase.Tirer(id, "Bernard");
+        tirerUseCase.Handle(new TirerCommand(id, "Bernard"));
 
         time = time.Add(TimeSpan.FromSeconds(1));
-        tirerUseCase.Tirer(id, "Bernard");
+        tirerUseCase.Handle(new TirerCommand(id, "Bernard"));
 
         time = time.Add(TimeSpan.FromSeconds(1));
-        tirerUseCase.Tirer(id, "Bernard");
+        tirerUseCase.Handle(new TirerCommand(id, "Bernard"));
 
         time = time.Add(TimeSpan.FromSeconds(1));
-        tirerUseCase.Tirer(id, "Bernard");
+        tirerUseCase.Handle(new TirerCommand(id, "Bernard"));
 
         time = time.Add(TimeSpan.FromSeconds(1));
 
         try
         {
-            tirerUseCase.Tirer(id, "Bernard");
+            tirerUseCase.Handle(new TirerCommand(id, "Bernard"));
         }
         catch ( TasPlusDeBallesMonVieuxChasseALaMain )
         {

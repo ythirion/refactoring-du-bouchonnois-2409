@@ -3,13 +3,20 @@ using Bouchonnois.Domain.Exceptions;
 
 namespace Bouchonnois.Service;
 
-public class TirerUseCase(IPartieDeChasseRepository repository, Func<DateTime> timeProvider)
+public interface IUseCase<in T> where T : TCommand
 {
-    public void Tirer(Guid id, string chasseur)
-    {
-        PartieDeChasse partieDeChasse = repository.GetById(id) ?? throw new LaPartieDeChasseNexistePas();
+    void Handle(T tirerCommand);
+}
 
-        partieDeChasse.Tirer(chasseur, timeProvider, () => repository.Save(partieDeChasse));
+public abstract record TCommand;
+
+public class TirerUseCase(IPartieDeChasseRepository repository, Func<DateTime> timeProvider) : IUseCase<TirerCommand>
+{
+    public void Handle(TirerCommand tirerCommand)
+    {
+        PartieDeChasse partieDeChasse = repository.GetById(tirerCommand.Id) ?? throw new LaPartieDeChasseNexistePas();
+
+        partieDeChasse.Tirer(tirerCommand.Chasseur, timeProvider, () => repository.Save(partieDeChasse));
 
         repository.Save(partieDeChasse);
     }
