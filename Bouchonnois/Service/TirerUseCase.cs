@@ -26,6 +26,6 @@ public class TirerUseCase(IPartieDeChasseRepository repository, Func<DateTime> t
 
     public Either<Error, Unit> HandleSansException(TirerCommand tirerCommand)
     {
-        throw new NotImplementedException();
+        return Error.New($"La partie de chasse {tirerCommand.Id} n'existe pas");
     }
 }

@@ -7,10 +7,12 @@ using FsCheck;
 using FsCheck.Xunit;
 
 using Microsoft.FSharp.Collections;
+using FluentAssertions.LanguageExt;
 
 using static Bouchonnois.Tests.Builders.PartieDeChasseBuilder;
 using static Bouchonnois.Tests.Builders.ChasseurBuilder;
 using static Bouchonnois.Tests.Assertions.PartieDeChasseExtensions;
+using LanguageExt;
 
 namespace Bouchonnois.Tests.Service;
 
@@ -150,17 +152,18 @@ public class TirerTest : PartieDeChasseServiceTests
         AssertLastEvent(_repository.SavedPartieDeChasse(),
             "Bernard veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!");
     }
-    
+
     [Fact]
     public void TirerUseCase_Should_Not_Return()
     {
+        var partieDeChasseId = Guid.NewGuid();
         // Act
-        var result = _tirerUseCase.HandleSansException(new TirerCommand(new Guid(), "Bernard"));
+        var result = _tirerUseCase.HandleSansException(new TirerCommand(partieDeChasseId, "Bernard"));
 
         // Assert
         result.Should().BeLeft(); // Par convention Left contient le cas d'erreur
-        result.Left().Should().Be($"La partie de chasse {partieDeChasseId} n'existe pas");
-        SavedPartieDeChasse().Should().BeNull();
+        result.LeftUnsafe().Message.Should().Be($"La partie de chasse {partieDeChasseId} n'existe pas");
+        _repository.SavedPartieDeChasse().Should().BeNull();
     }
 
     #region Properties
@@ -233,4 +236,10 @@ public static class PartieDeChasseExtensions
                     .AvecDesBalles(c.nbBalles)
             )
             .ToArray();
+}
+
+public static class LangExtExtensions
+{
+    public static TRight RightUnsafe<TLeft, TRight>(this Either<TLeft, TRight> either) => either.RightToSeq()[0];
+    public static TLeft LeftUnsafe<TLeft, TRight>(this Either<TLeft, TRight> either) => either.LeftToSeq()[0];
 }
