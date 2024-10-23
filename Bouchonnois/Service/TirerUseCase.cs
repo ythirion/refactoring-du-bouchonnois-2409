@@ -3,7 +3,7 @@ using Bouchonnois.Domain.Exceptions;
 
 using LanguageExt;
 using LanguageExt.Common;
-
+using static LanguageExt.Prelude;
 namespace Bouchonnois.Service;
 
 public interface IUseCase<in T> where T : TCommand
@@ -26,15 +26,12 @@ public class TirerUseCase(IPartieDeChasseRepository repository, Func<DateTime> t
 
     public Either<Error, Unit> HandleSansException(TirerCommand tirerCommand)
     {
-        try
-        {
-            Handle(tirerCommand);
-            return Unit.Default;
-        }
-        catch ( Exception e )
-        {
-            Console.WriteLine(e);
-            return Error.New($"La partie de chasse {tirerCommand.Id} n'existe pas");
-        }
+        return Try(() =>
+            {
+                Handle(tirerCommand);
+                return Unit.Default;
+            })
+            .ToEither()
+            .MapLeft(ex => Error.New($"La partie de chasse {tirerCommand.Id} n'existe pas"));
     }
 }
