@@ -97,7 +97,6 @@ public class TirerTest : PartieDeChasseServiceTests
     public void EchoueCarPartieNexistePas()
     {
         var id = Guid.NewGuid();
-        var repository = new PartieDeChasseRepositoryForTests();
         Action? tirerQuandPartieExistePas = () => _tirerUseCase.Handle(new TirerCommand(id, "Bernard"));
 
         tirerQuandPartieExistePas.Should()
@@ -150,6 +149,18 @@ public class TirerTest : PartieDeChasseServiceTests
 
         AssertLastEvent(_repository.SavedPartieDeChasse(),
             "Bernard veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!");
+    }
+    
+    [Fact]
+    public void TirerUseCase_Should_Not_Return()
+    {
+        // Act
+        var result = _tirerUseCase.HandleSansException(new TirerCommand(new Guid(), "Bernard"));
+
+        // Assert
+        result.Should().BeLeft(); // Par convention Left contient le cas d'erreur
+        result.Left().Should().Be($"La partie de chasse {partieDeChasseId} n'existe pas");
+        SavedPartieDeChasse().Should().BeNull();
     }
 
     #region Properties

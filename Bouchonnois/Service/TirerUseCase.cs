@@ -1,6 +1,9 @@
 using Bouchonnois.Domain;
 using Bouchonnois.Domain.Exceptions;
 
+using LanguageExt;
+using LanguageExt.Common;
+
 namespace Bouchonnois.Service;
 
 public interface IUseCase<in T> where T : TCommand
@@ -19,5 +22,10 @@ public class TirerUseCase(IPartieDeChasseRepository repository, Func<DateTime> t
         partieDeChasse.Tirer(tirerCommand.Chasseur, timeProvider, () => repository.Save(partieDeChasse));
 
         repository.Save(partieDeChasse);
+    }
+
+    public Either<Error, Unit> HandleSansException(TirerCommand tirerCommand)
+    {
+        throw new NotImplementedException();
     }
 }
