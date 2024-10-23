@@ -5,20 +5,12 @@ namespace Bouchonnois.Service;
 
 public class TirerUseCase(IPartieDeChasseRepository repository, Func<DateTime> timeProvider)
 {
-    private readonly IPartieDeChasseRepository _repository = repository;
-    private readonly Func<DateTime> _timeProvider = timeProvider;
-
     public void Tirer(Guid id, string chasseur)
     {
-        PartieDeChasse partieDeChasse = _repository.GetById(id) ?? throw new LaPartieDeChasseNexistePas();
+        PartieDeChasse partieDeChasse = repository.GetById(id) ?? throw new LaPartieDeChasseNexistePas();
 
-        if ( !partieDeChasse.Chasseurs.Exists(c => c.Nom == chasseur) )
-        {
-            throw new ChasseurInconnu(chasseur);
-        }
+        partieDeChasse.Tirer(chasseur, timeProvider, () => repository.Save(partieDeChasse));
 
-        partieDeChasse.Tirer(chasseur, _timeProvider, () => _repository.Save(partieDeChasse));
-
-        _repository.Save(partieDeChasse);
+        repository.Save(partieDeChasse);
     }
 }

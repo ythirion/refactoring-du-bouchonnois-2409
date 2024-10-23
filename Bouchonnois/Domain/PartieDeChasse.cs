@@ -21,11 +21,9 @@ public class PartieDeChasse
 
         if ( IsPartieDeChasseTerminée() )
         {
-            Events.Add(new Event(timeProvider(),
-                $"{chasseur} veut tirer -> On tire pas quand la partie est terminée"));
-
-            save();
-
+            EmetEvenementEtSauver(timeProvider, save,
+                $"{chasseur} veut tirer -> On tire pas quand la partie est terminée");
+            
             throw new OnTirePasQuandLaPartieEstTerminée();
         }
 
@@ -38,10 +36,8 @@ public class PartieDeChasse
 
         if (chasseurQuiTire.YaPlusDeBalles())
         {
-            Events.Add(new Event(timeProvider(),
-                $"{chasseur} tire -> T'as plus de balles mon vieux, chasse à la main"));
-
-            save();
+            EmetEvenementEtSauver(timeProvider, save,
+                $"{chasseur} tire -> T'as plus de balles mon vieux, chasse à la main");
 
             throw new TasPlusDeBallesMonVieuxChasseALaMain();
         }
