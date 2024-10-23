@@ -14,10 +14,7 @@ public class PartieDeChasse
     {
         if ( IsDuringApéro() )
         {
-            Events.Add(new Event(timeProvider(),
-                                        $"{chasseur} veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!"));
-
-            save();
+            EmetEvenementEtSauver(timeProvider, save, $"{chasseur} veut tirer -> On tire pas pendant l'apéro, c'est sacré !!!");
 
             throw new OnTirePasPendantLapéroCestSacré();
         }
@@ -36,6 +33,29 @@ public class PartieDeChasse
         {
             throw new ChasseurInconnu(chasseur);
         }
+        
+        Chasseur chasseurQuiTire = Chasseurs.Find(c => c.Nom == chasseur)!;
+
+        if (chasseurQuiTire.YaPlusDeBalles())
+        {
+            Events.Add(new Event(timeProvider(),
+                $"{chasseur} tire -> T'as plus de balles mon vieux, chasse à la main"));
+
+            save();
+
+            throw new TasPlusDeBallesMonVieuxChasseALaMain();
+        }
+
+        Events.Add(new Event(timeProvider(), $"{chasseur} tire"));
+        
+        chasseurQuiTire.ATire();
+    }
+
+    private void EmetEvenementEtSauver(Func<DateTime> timeProvider, Action save, string message)
+    {
+        Events.Add(new Event(timeProvider(), message));
+
+        save();
     }
 
     private bool IsDuringApéro()
